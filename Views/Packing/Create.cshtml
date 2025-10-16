@@ -1,0 +1,975 @@
+﻿@model RMG_Shipping_Documents.Models.PackingList
+
+<style>
+    .section-header {
+        background-color: #17a2b8;
+        color: white;
+        padding: 8px 12px;
+        font-weight: bold;
+        margin-top: 20px;
+    }
+
+    .section-header-orange {
+        background-color: #ff9800;
+        color: white;
+        padding: 8px 12px;
+        font-weight: bold;
+        margin-top: 20px;
+    }
+
+    .section-header-yellow {
+        background-color: #ffc107;
+        color: black;
+        padding: 8px 12px;
+        font-weight: bold;
+        margin-top: 20px;
+    }
+
+    .packing-table {
+        min-width: 1800px;
+    }
+
+        .packing-table th {
+            background-color: #d4edda;
+            font-size: 12px;
+            padding: 5px;
+            text-align: center;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        .packing-table td {
+            padding: 3px;
+            vertical-align: middle;
+        }
+
+        .packing-table input {
+            font-size: 12px;
+            padding: 2px 5px;
+            height: 28px;
+            min-width: 80px;
+        }
+
+    .form-label-custom {
+        font-weight: 500;
+        margin-bottom: 0;
+        font-size: 14px;
+        min-width: 150px;
+        white-space: nowrap;
+    }
+
+    .dropdown-label {
+        font-style: italic;
+        color: #666;
+        font-size: 13px;
+    }
+
+    .btn-add {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 5px 15px;
+        font-weight: bold;
+    }
+
+    .btn-remove {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        padding: 5px 15px;
+        font-weight: bold;
+    }
+
+    .btn-save {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 40px;
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    .btn-cancel {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        padding: 10px 40px;
+        font-weight: bold;
+        font-size: 16px;
+        text-decoration:none;
+    }
+
+    .summary-table th {
+        background-color: #d4edda;
+        padding: 8px;
+        text-align: center;
+    }
+
+    .declaration-table th {
+        text-align: center;
+        padding: 8px;
+        font-weight: bold;
+    }
+
+    .table-scroll {
+        overflow-x: auto;
+        max-width: 100%;
+    }
+
+    /* Modal Styles */
+    .modal-backdrop-custom {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1040;
+        display: none;
+    }
+
+        .modal-backdrop-custom.show {
+            display: block;
+        }
+
+    .modal-dialog-custom {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+        max-width: 1200px;
+        max-height: 90vh;
+        overflow-y: auto;
+        z-index: 1050;
+        display: none;
+    }
+
+        .modal-dialog-custom.show {
+            display: block;
+        }
+
+    .modal-form-container {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .modal-form-header {
+        background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+        color: white;
+        padding: 20px 30px;
+        font-size: 24px;
+        font-weight: 600;
+        border-radius: 8px 8px 0 0;
+    }
+
+    .modal-form-body {
+        padding: 30px;
+    }
+
+    .carton-row {
+        background: #f8f9fa;
+        border: 2px solid #dee2e6;
+        border-radius: 8px;
+        padding: 25px;
+        margin-bottom: 20px;
+    }
+
+    .section-title {
+        background: #e9ecef;
+        padding: 8px 15px;
+        border-radius: 5px;
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 15px;
+        font-size: 14px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+
+        .form-group input {
+            width: 100%;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            padding: 8px 12px;
+            font-size: 14px;
+        }
+
+            .form-group input:focus {
+                outline: none;
+                border-color: #17a2b8;
+                box-shadow: 0 0 0 0.2rem rgba(23, 162, 184, 0.25);
+            }
+
+            .form-group input[readonly] {
+                background-color: #e9ecef;
+                cursor: not-allowed;
+            }
+
+    .row-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 15px;
+    }
+
+    .modal-action-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+        justify-content: flex-start;
+    }
+
+    .btn-modal-save {
+        background: #007bff;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        padding: 12px 30px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 16px;
+        margin-right: 10px;
+        transition: background 0.2s;
+    }
+
+        .btn-modal-save:hover {
+            background: #0056b3;
+        }
+
+    .btn-modal-cancel {
+        background: #6c757d;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        padding: 12px 30px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 16px;
+        transition: background 0.2s;
+    }
+
+        .btn-modal-cancel:hover {
+            background: #545b62;
+        }
+</style>
+
+@{
+    ViewData["Title"] = Model.Id > 0 ? "Edit Packing List" : "Create Packing List";
+    var isEdit = Model.Id > 0;
+}
+
+<div class="section-header-yellow d-flex justify-content-between align-items-center">
+    <span>@(isEdit ? "EDIT PACKING LIST" : "CREATE PACKING LIST")</span>
+    <span style="font-weight: normal; font-size: 14px;">⚙️ Packing template setting</span>
+</div>
+
+<form asp-action="CreateEdit" method="post">
+    @if (isEdit)
+    {
+        <input type="hidden" asp-for="Id" />
+    }
+    <div class="row g-2 mt-2">
+        <div class="col-md-6">
+            <div class="d-flex align-items-center">
+                <label class="form-label-custom me-2">Company</label>
+                <select asp-for="Company" class="form-select form-select-sm flex-grow-1">
+                    <option class="dropdown-label">--Select--</option>
+                    <option class="dropdown-label">Aman graphics</option>
+                    <option class="dropdown-label">Aman Kinitting</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="d-flex align-items-center">
+                <label class="form-label-custom me-2">Buyer</label>
+                <select asp-for="BuyerName" class="form-select form-select-sm flex-grow-1">
+                    <option class="dropdown-label">--Select--</option>
+                    <option class="dropdown-label">Next source ltd</option>
+                    <option class="dropdown-label">Next venture plc</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="d-flex align-items-center">
+                <label class="form-label-custom me-2">Style</label>
+                <select asp-for="Style" class="form-select form-select-sm flex-grow-1">
+                    <option class="dropdown-label">--Select--</option>
+                    <option class="dropdown-label">Common</option>
+                    <option class="dropdown-label">Unique</option>
+                    <option class="dropdown-label">Mixed</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="d-flex align-items-center">
+                <label class="form-label-custom me-2">Purchase Order (PO)</label>
+                <select asp-for="PO" class="form-select form-select-sm flex-grow-1">
+                    <option class="dropdown-label">--Select--</option>
+                    <option class="dropdown-label">ATS#102025</option>
+                    <option class="dropdown-label">ATQ#092025</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="d-flex align-items-center">
+                <label class="form-label-custom me-2">Style-(Buyer)</label>
+                <input asp-for="StyleBuyer" class="form-control form-control-sm flex-grow-1" />
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="d-flex align-items-center">
+                <label class="form-label-custom me-2">Shipped By</label>
+                <select asp-for="ShippedBy" class="form-select form-select-sm flex-grow-1">
+                    <option class="dropdown-label">--Select--</option>
+                    <option class="dropdown-label">Continental Couriar</option>
+                    <option class="dropdown-label">Pathao Shipping</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="d-flex align-items-center">
+                <label class="form-label-custom me-2">Short Description</label>
+                <input asp-for="ShortDescription" type="text" class="form-control form-control-sm flex-grow-1" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="d-flex align-items-center">
+                <label class="form-label-custom me-2">Size</label>
+                <input asp-for="Size" type="text" class="form-control form-control-sm flex-grow-1" />
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="d-flex align-items-center">
+                <label class="form-label-custom me-2">Color</label>
+                <input asp-for="Color" type="text" class="form-control form-control-sm flex-grow-1" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="d-flex align-items-center">
+                <label class="form-label-custom me-2">Brand</label>
+                <select asp-for="Brand" class="form-select form-select-sm flex-grow-1">
+                    <option class="dropdown-label">--Select--</option>
+                    <option class="dropdown-label">China</option>
+                    <option class="dropdown-label">Italian</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="d-flex align-items-center">
+                <label class="form-label-custom me-2">Packing</label>
+                <input asp-for="Packing" type="text" class="form-control form-control-sm flex-grow-1" />
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="d-flex align-items-center">
+                <label class="form-label-custom me-2">Pcs Per Set</label>
+                <input asp-for="PcsPerSet" type="text" class="form-control form-control-sm flex-grow-1" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="d-flex align-items-center">
+                <label class="form-label-custom me-2">Product No</label>
+                <input asp-for="ProductNo" type="text" class="form-control form-control-sm flex-grow-1" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="d-flex align-items-center">
+                <label class="form-label-custom me-2">Country Of Origin</label>
+                <input asp-for="CountryOfOrigin" type="text" class="form-control form-control-sm flex-grow-1" />
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="d-flex align-items-center">
+                <label class="form-label-custom me-2">Port Of Loading</label>
+                <input asp-for="PortOfLoading" type="text" class="form-control form-control-sm flex-grow-1" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="d-flex align-items-center">
+                <label class="form-label-custom me-2">Country Of Destination</label>
+                <input asp-for="CountryOfDestination" type="text" class="form-control form-control-sm flex-grow-1" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="d-flex align-items-center">
+                <label class="form-label-custom me-2">Port Of Discharge</label>
+                <input asp-for="PortOfDischarge" type="text" class="form-control form-control-sm flex-grow-1" />
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="d-flex align-items-center">
+                <label class="form-label-custom me-2">Incoterm</label>
+                <input asp-for="Incoterm" type="text" class="form-control form-control-sm flex-grow-1" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="d-flex align-items-center">
+                <label class="form-label-custom me-2">ORMS No</label>
+                <input asp-for="ORMSNo" type="text" class="form-control form-control-sm flex-grow-1" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="d-flex align-items-center">
+                <label class="form-label-custom me-2">LMPO No/ NSL PO No</label>
+                <input asp-for="LMPONo" type="text" class="form-control form-control-sm flex-grow-1" />
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="d-flex align-items-center">
+                <label class="form-label-custom me-2">ORMS Style No</label>
+                <input asp-for="ORMSStyleNo" type="text" class="form-control form-control-sm flex-grow-1" />
+            </div>
+        </div>
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <div class="d-flex align-items-center">
+                <label class="form-label-custom me-2">Status</label>
+                <select asp-for="Status" class="form-select form-select-sm flex-grow-1">
+                    <option class="dropdown-label">Draft</option>
+                    <option class="dropdown-label">Reviewed</option>
+                    <option class="dropdown-label">Approved</option>
+                    <option class="dropdown-label">Locked</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-header-yellow mt-3">Buyer Specific Fields</div>
+    <div class="row g-2 mt-2">
+        <div class="col-md-3">
+            <div class="d-flex align-items-center">
+                <label class="form-label-custom me-2">Item No</label>
+                <input asp-for="ItemNo" type="text" class="form-control form-control-sm flex-grow-1" />
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="d-flex align-items-center">
+                <label class="form-label-custom me-2" style="text-align:center">POD</label>
+                <input asp-for="POD" type="text" class="form-control form-control-sm flex-grow-1" />
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="d-flex align-items-center">
+                <label class="form-label-custom me-2" style="text-align:center">BOI</label>
+                <input asp-for="BOI" type="text" class="form-control form-control-sm flex-grow-1" />
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="d-flex align-items-center">
+                <label class="form-label-custom me-2" style="text-align:center">WWHK</label>
+                <input asp-for="WWHK" type="text" class="form-control form-control-sm flex-grow-1" />
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="d-flex align-items-center">
+                <label class="form-label-custom me-2">No Of Color</label>
+                <input asp-for="NoOfColor" type="text" class="form-control form-control-sm flex-grow-1" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="d-flex align-items-center">
+                <label class="form-label-custom me-2" style="text-align:center">KeyCode</label>
+                <input asp-for="KeyCode" type="text" class="form-control form-control-sm flex-grow-1" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="d-flex align-items-center">
+                <label class="form-label-custom me-2" style="text-align:center">Supplier Code</label>
+                <input asp-for="SupplierCode" type="text" class="form-control form-control-sm flex-grow-1" />
+            </div>
+        </div>
+    </div>
+
+    <div class="section-header mt-4">Packing Details</div>
+    <div class="table-scroll mt-2">
+        <table class="table table-bordered packing-table">
+            <thead>
+                <tr>
+                    <th rowspan="2">SL</th>
+                    <th rowspan="2">No Of Carton</th>
+                    <th colspan="2">Carton</th>
+                    <th rowspan="2">Size Name</th>
+                    <th rowspan="2">Ratio</th>
+                    <th rowspan="2">ARTICLE NO.</th>
+                    <th rowspan="2">Pcs/Pack</th>
+                    <th rowspan="2">Pac/Carton</th>
+                    <th rowspan="2">Order Qty Pcs</th>
+                    <th rowspan="2">Total Pcs/Size</th>
+                    <th rowspan="2">Total Pacs</th>
+                    <th rowspan="2">G.Wt</th>
+                    <th rowspan="2">N.Wt</th>
+                    <th rowspan="2">Total G.Wt</th>
+                    <th rowspan="2">Total N.Wt</th>
+                    <th rowspan="2">Length</th>
+                    <th rowspan="2">Weight</th>
+                    <th rowspan="2">Height</th>
+                    <th rowspan="2">CBM</th>
+                </tr>
+                <tr>
+                    <th>Start</th>
+                    <th>End</th>
+                </tr>
+            </thead>
+            <tbody id="packingTableBody">
+                @if (isEdit && Model.PackingDetails != null && Model.PackingDetails.Any())
+                {
+                    int index = 0;
+                    foreach (var detail in Model.PackingDetails)
+                    {
+                        <tr>
+                            <td>@(index + 1)</td>
+                            <td><input type="number" class="form-control form-control-sm" name="PackingDetails[@index].NoOfCarton" value="@detail.NoOfCarton" /></td>
+                            <td><input type="text" class="form-control form-control-sm" name="PackingDetails[@index].CartonStart" value="@detail.CartonStart" /></td>
+                            <td><input type="text" class="form-control form-control-sm" name="PackingDetails[@index].CartonEnd" value="@detail.CartonEnd" /></td>
+                            <td><input type="text" class="form-control form-control-sm" name="PackingDetails[@index].SizeName" value="@detail.SizeName" /></td>
+                            <td><input type="text" class="form-control form-control-sm" name="PackingDetails[@index].Ratio" value="@detail.Ratio" /></td>
+                            <td><input type="text" class="form-control form-control-sm" name="PackingDetails[@index].ArticleNo" value="@detail.ArticleNo" /></td>
+                            <td><input type="number" class="form-control form-control-sm" name="PackingDetails[@index].PcsPack" value="@detail.PcsPack" /></td>
+                            <td><input type="number" class="form-control form-control-sm" name="PackingDetails[@index].PacCarton" value="@detail.PacCarton" /></td>
+                            <td><input type="number" class="form-control form-control-sm" name="PackingDetails[@index].OrderQtyPcs" value="@detail.OrderQtyPcs" /></td>
+                            <td><input type="number" class="form-control form-control-sm" name="PackingDetails[@index].TotalPcsSize" value="@detail.TotalPcsSize" /></td>
+                            <td><input type="number" class="form-control form-control-sm" name="PackingDetails[@index].TotalPacs" value="@detail.TotalPacs" /></td>
+                            <td><input type="number" step="0.01" class="form-control form-control-sm" name="PackingDetails[@index].GWt" value="@detail.GWt" /></td>
+                            <td><input type="number" step="0.01" class="form-control form-control-sm" name="PackingDetails[@index].NWt" value="@detail.NWt" /></td>
+                            <td><input type="number" step="0.01" class="form-control form-control-sm" name="PackingDetails[@index].TotalGWt" value="@detail.TotalGWt" /></td>
+                            <td><input type="number" step="0.01" class="form-control form-control-sm" name="PackingDetails[@index].TotalNWt" value="@detail.TotalNWt" /></td>
+                            <td><input type="number" step="0.01" class="form-control form-control-sm" name="PackingDetails[@index].Length" value="@detail.Length" /></td>
+                            <td><input type="number" step="0.01" class="form-control form-control-sm" name="PackingDetails[@index].Weight" value="@detail.Weight" /></td>
+                            <td><input type="number" step="0.01" class="form-control form-control-sm" name="PackingDetails[@index].Height" value="@detail.Height" /></td>
+                            <td><input type="number" step="0.01" class="form-control form-control-sm" name="PackingDetails[@index].CBM" value="@detail.CBM" readonly /></td>
+                            <input type="hidden" name="PackingDetails[@index].Id" value="@detail.Id" />
+                            <input type="hidden" name="PackingDetails[@index].PackingListId" value="@detail.PackingListId" />
+                        </tr>
+                        index++;
+                    }
+                    // Set rowIndex to the last index + 1 for JavaScript to continue correctly
+                    <script>
+                        rowIndex = @index;
+                    </script>
+                }
+                else
+                {
+                    <tr>
+                        <td>1</td>
+                        <td><input type="number" class="form-control form-control-sm" name="PackingDetails[0].NoOfCarton" /></td>
+                        <td><input type="text" class="form-control form-control-sm" name="PackingDetails[0].CartonStart" /></td>
+                        <td><input type="text" class="form-control form-control-sm" name="PackingDetails[0].CartonEnd" /></td>
+                        <td><input type="text" class="form-control form-control-sm" name="PackingDetails[0].SizeName" /></td>
+                        <td><input type="text" class="form-control form-control-sm" name="PackingDetails[0].Ratio" /></td>
+                        <td><input type="text" class="form-control form-control-sm" name="PackingDetails[0].ArticleNo" /></td>
+                        <td><input type="number" class="form-control form-control-sm" name="PackingDetails[0].PcsPack" /></td>
+                        <td><input type="number" class="form-control form-control-sm" name="PackingDetails[0].PacCarton" /></td>
+                        <td><input type="number" class="form-control form-control-sm" name="PackingDetails[0].OrderQtyPcs" /></td>
+                        <td><input type="number" class="form-control form-control-sm" name="PackingDetails[0].TotalPcsSize" /></td>
+                        <td><input type="number" class="form-control form-control-sm" name="PackingDetails[0].TotalPacs" /></td>
+                        <td><input type="number" step="0.01" class="form-control form-control-sm" name="PackingDetails[0].GWt" /></td>
+                        <td><input type="number" step="0.01" class="form-control form-control-sm" name="PackingDetails[0].NWt" /></td>
+                        <td><input type="number" step="0.01" class="form-control form-control-sm" name="PackingDetails[0].TotalGWt" /></td>
+                        <td><input type="number" step="0.01" class="form-control form-control-sm" name="PackingDetails[0].TotalNWt" /></td>
+                        <td><input type="number" step="0.01" class="form-control form-control-sm" name="PackingDetails[0].Length" /></td>
+                        <td><input type="number" step="0.01" class="form-control form-control-sm" name="PackingDetails[0].Weight" /></td>
+                        <td><input type="number" step="0.01" class="form-control form-control-sm" name="PackingDetails[0].Height" /></td>
+                        <td><input type="number" step="0.01" class="form-control form-control-sm" name="PackingDetails[0].CBM" readonly /></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="mt-2">
+        <button type="button" class="btn-add" id="addRowBtn">Add Row ( +)</button>
+        <button type="button" class="btn-remove" id="removeRowBtn">Remove Row (-)</button>
+    </div>
+
+    <div class="row g-2 mt-3">
+        <div class="col-md-4">
+            <div class="d-flex align-items-center">
+                <label class="form-label-custom me-2">Cartons</label>
+                <input asp-for="Cartons"  type="number" class="form-control form-control-sm flex-grow-1" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="d-flex align-items-center">
+                <label class="form-label-custom me-2">Order Qty Pac</label>
+                <input asp-for="OrderQtyPac" type="number" class="form-control form-control-sm flex-grow-1" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="d-flex align-items-center">
+                <label class="form-label-custom me-2">Order Qty Pcs</label>
+                <input asp-for="OrderQtyPcs" type="number" class="form-control form-control-sm flex-grow-1" />
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="d-flex align-items-center">
+                <label class="form-label-custom me-2">Ship Qty Pac</label>
+                <input asp-for="ShipQtyPac" type="number" class="form-control form-control-sm flex-grow-1" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="d-flex align-items-center">
+                <label class="form-label-custom me-2">Ship Qty Pcs</label>
+                <input asp-for="ShipQtyPcs" type="number" class="form-control form-control-sm flex-grow-1" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="d-flex align-items-center">
+                <label class="form-label-custom me-2">Destination</label>
+                <select asp-for="Destination" class="form-select form-select-sm flex-grow-1">
+                    <option class="dropdown-label">--Select--</option>
+                    <option class="dropdown-label">China</option>
+                    <option class="dropdown-label">Japan</option>
+                    <option class="dropdown-label">USA</option>
+                    <option class="dropdown-label">Germany</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-header-orange mt-4">Summary</div>
+    <div class="table-responsive mt-2">
+        <table class="table table-bordered summary-table">
+            <thead>
+                <tr>
+                    <th>SL.</th>
+                    <th>Size Name</th>                    
+                    <th>Order Qty</th>
+                    <th>Actual Shipment Qty</th>
+                    <th>Var(+/-)</th>
+                    <th>Percentage %</th>
+                </tr>
+            </thead>
+            <tbody id="summaryTableBody">
+                <tr>
+                    <td><input asp-for="SerialNO" name="" type="number" class="form-control form-control-sm flex-grow-1" /></td>
+                    <td><input asp-for="SizeName" type="text" class="form-control form-control-sm flex-grow-1" /></td>
+                    <td><input asp-for="OrderQty" type="text" class="form-control form-control-sm flex-grow-1" /></td>
+                    <td><input asp-for="ActualShipment" type="number" class="form-control form-control-sm flex-grow-1" /></td>
+                    <td><input asp-for="Variant" type="number" class="form-control form-control-sm flex-grow-1" /></td>
+                    <td><input asp-for="Percentage" type="number" class="form-control form-control-sm flex-grow-1" /></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section-header mt-4 d-flex justify-content-between align-items-center">
+        <span>Packing Declaration</span>
+        <a href="/Packing/DeclarationSetting" style="font-weight: normal; font-size: 14px; text-decoration: none; color: inherit; cursor: pointer;">
+            ⚙️ Declaration setting
+        </a>
+    </div>
+    <div class="table-responsive mt-2">
+        <table class="table table-bordered declaration-table">
+            <thead>
+                <tr>
+                    <th style="width: 10%;"></th>
+                    <th style="width: 45%;">Question</th>
+                    <th style="width: 45%;">Answer</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Have unacceptable packaging materials or bamboo products been used as packaging or dunnage in the consignment covered by this document?</td>
+                    <td><input type="text" class="form-control form-control-sm" name="Declaration1" /></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Has solid timber packaging/dunnage been used in consignments covered by this document?</td>
+                    <td><input type="text" class="form-control form-control-sm" name="Declaration2" /></td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>All timber packaging/dunnage used in the consignment has been (Please indicate below) Treated in compliance with Department of Agriculture and Water Resources treatment requirements</td>
+                    <td><input type="text" class="form-control form-control-sm" name="Declaration3" /></td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>statement to be removed from document when not relevant</td>
+                    <td><input type="text" class="form-control form-control-sm" name="Declaration4" /></td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>Issued Date</td>
+                    <td><input type="date" class="form-control form-control-sm" name="IssuedDate" placeholder="Date Calender" /></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mt-4 mb-4">
+        <button type="submit" class="btn-save">SAVE</button>
+        <a href="/Packing" class="btn-cancel">CANCEL</a>
+    </div>
+</form>
+
+<!-- Carton Details Modal -->
+<div class="modal-backdrop-custom" id="modalBackdrop"></div>
+
+<div class="modal-dialog-custom" id="cartonModal">
+    <div class="modal-form-container">
+        <div class="modal-form-header">
+            Carton Details
+        </div>
+        <div class="modal-form-body">
+            <div id="cartonRowsContainer">
+                <div class="carton-row" id="cartonForm">
+                    @* <div class="section-title">Basic Information</div> *@
+                    <div class="row-grid">
+                        <div class="form-group">
+                            <label>No Of Carton</label>
+                            <input type="number" id="noCarton" onchange="calculateValues()">
+                        </div>
+                        <div class="form-group">
+                            <label>Start</label>
+                            <input type="text" id="cartonStart">
+                        </div>
+                        <div class="form-group">
+                            <label>End</label>
+                            <input type="text" id="cartonEnd">
+                        </div>
+                    </div>
+
+                    @* <div class="section-title mt-3">Product Details</div> *@
+                    <div class="row-grid">
+                        <div class="form-group">
+                            <label>Size Name</label>
+                            <input type="text" id="sizeName">
+                        </div>
+                        <div class="form-group">
+                            <label>Ratio</label>
+                            <input type="text" id="ratio">
+                        </div>
+                        <div class="form-group">
+                            <label>ARTICLE NO.</label>
+                            <input type="text" id="articleNo">
+                        </div>
+                        <div class="form-group">
+                            <label>Pcs/Pack</label>
+                            <input type="number" id="pcsPack" onchange="calculateValues()">
+                        </div>
+                        <div class="form-group">
+                            <label>Pac/Carton</label>
+                            <input type="number" id="pacCarton" onchange="calculateValues()">
+                        </div>
+                        <div class="form-group">
+                            <label>Order Qty Pcs</label>
+                            <input type="number" id="orderQty">
+                        </div>
+                        <div class="form-group">
+                            <label>Total Pcs/Size</label>
+                            <input type="number" id="totalPcs" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Total Pacs</label>
+                            <input type="number" id="totalPacs" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>G.Wt (kg)</label>
+                            <input type="number" step="0.01" id="gWt" onchange="calculateValues()">
+                        </div>
+                        <div class="form-group">
+                            <label>N.Wt (kg)</label>
+                            <input type="number" step="0.01" id="nWt" onchange="calculateValues()">
+                        </div>
+                        <div class="form-group">
+                            <label>Total G.Wt (kg)</label>
+                            <input type="number" step="0.01" id="totalGWt" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Total N.Wt (kg)</label>
+                            <input type="number" step="0.01" id="totalNWt" readonly>
+                        </div>
+                    </div>
+
+                    <div class="row-grid">
+                        <div class="form-group">
+                            <label>Length</label>
+                            <input type="number" step="0.01" id="length" onchange="calculateValues()">
+                        </div>
+                        <div class="form-group">
+                            <label>Weight</label>
+                            <input type="number" step="0.01" id="weight" onchange="calculateValues()">
+                        </div>
+                        <div class="form-group">
+                            <label>Height</label>
+                            <input type="number" step="0.01" id="height" onchange="calculateValues()">
+                        </div>
+                        <div class="form-group">
+                            <label>CBM</label>
+                            <input type="number" step="0.01" id="CBM" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-action-buttons" style="margin-top: 30px; border-top: 2px solid #dee2e6; padding-top: 30px;">
+                <button class="btn-modal-save" onclick="saveCartonData()">DONE</button>
+                <button class="btn-modal-cancel" onclick="closeModal()">CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let rowIndex = 1;
+
+    // Modal Functions
+    function calculateValues() {
+        const noCarton = parseFloat(document.getElementById('noCarton')?.value) || 0;
+        const pcsPack = parseFloat(document.getElementById('pcsPack')?.value) || 0;
+        const pacCarton = parseFloat(document.getElementById('pacCarton')?.value) || 0;
+        const gWt = parseFloat(document.getElementById('gWt')?.value) || 0;
+        const nWt = parseFloat(document.getElementById('nWt')?.value) || 0;
+        const length = parseFloat(document.getElementById('length')?.value) || 0;
+        const weight = parseFloat(document.getElementById('weight')?.value) || 0;
+        const height = parseFloat(document.getElementById('height')?.value) || 0;
+
+        // Calculate Total Pcs/Size = Pcs/Pack × Pac/Carton × No Of Carton
+        const totalPcs = pcsPack * pacCarton * noCarton;
+        document.getElementById('totalPcs').value = totalPcs || '';
+
+        // Calculate Total Pacs = Pac/Carton × No Of Carton
+        const totalPacs = pacCarton * noCarton;
+        document.getElementById('totalPacs').value = totalPacs || '';
+
+        // Calculate Total G.Wt = G.Wt × No Of Carton
+        const totalGWt = gWt * noCarton;
+        document.getElementById('totalGWt').value = totalGWt ? totalGWt.toFixed(2) : '';
+
+        // Calculate Total N.Wt = N.Wt × No Of Carton
+        const totalNWt = nWt * noCarton;
+        document.getElementById('totalNWt').value = totalNWt ? totalNWt.toFixed(2) : '';
+
+        // Calculate CBM
+        const totalCBM = length * weight * height;
+        document.getElementById('CBM').value = totalCBM ? totalCBM.toFixed(2): '';
+    }
+
+    function openModal() {
+        document.getElementById('modalBackdrop').classList.add('show');
+        document.getElementById('cartonModal').classList.add('show');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        document.getElementById('modalBackdrop').classList.remove('show');
+        document.getElementById('cartonModal').classList.remove('show');
+        document.body.style.overflow = 'auto';
+        clearForm();
+    }
+
+    function clearForm() {
+        document.getElementById('noCarton').value = '';
+        document.getElementById('cartonStart').value = '';
+        document.getElementById('cartonEnd').value = '';
+        document.getElementById('sizeName').value = '';
+        document.getElementById('ratio').value = '';
+        document.getElementById('articleNo').value = '';
+        document.getElementById('pcsPack').value = '';
+        document.getElementById('pacCarton').value = '';
+        document.getElementById('orderQty').value = '';
+        document.getElementById('totalPcs').value = '';
+        document.getElementById('totalPacs').value = '';
+        document.getElementById('gWt').value = '';
+        document.getElementById('nWt').value = '';
+        document.getElementById('totalGWt').value = '';
+        document.getElementById('totalNWt').value = '';
+        document.getElementById('measL').value = '';
+    }
+
+    function saveCartonData() {
+        const cartonData = {
+            noCarton: document.getElementById('noCarton').value,
+            cartonStart: document.getElementById('cartonStart').value,
+            cartonEnd: document.getElementById('cartonEnd').value,
+            sizeName: document.getElementById('sizeName').value,
+            ratio: document.getElementById('ratio').value,
+            articleNo: document.getElementById('articleNo').value,
+            pcsPack: document.getElementById('pcsPack').value,
+            pacCarton: document.getElementById('pacCarton').value,
+            orderQty: document.getElementById('orderQty').value,
+            totalPcs: document.getElementById('totalPcs').value,
+            totalPacs: document.getElementById('totalPacs').value,
+            gWt: document.getElementById('gWt').value,
+            nWt: document.getElementById('nWt').value,
+            totalGWt: document.getElementById('totalGWt').value,
+            totalNWt: document.getElementById('totalNWt').value,
+            length: document.getElementById('length').value,
+            weight:  document.getElementById('weight').value,
+            height:  document.getElementById('height').value,
+            CBM:  document.getElementById('CBM').value,
+        };
+
+        addCartonRowToTable(cartonData);
+        closeModal();
+    }
+
+    // Function to add row with data from modal
+    function addCartonRowToTable(cartonData) {
+        const tableBody = document.getElementById('packingTableBody');
+        rowIndex++;
+
+        const newRow = `
+            <tr>
+                <td>${rowIndex}</td>
+                <td><input type="number" class="form-control form-control-sm" name="PackingDetails[${rowIndex-1}].NoOfCarton" value="${cartonData.noCarton || ''}" /></td>
+                <td><input type="text" class="form-control form-control-sm" name="PackingDetails[${rowIndex-1}].CartonStart" value="${cartonData.cartonStart || ''}" /></td>
+                <td><input type="text" class="form-control form-control-sm" name="PackingDetails[${rowIndex-1}].CartonEnd" value="${cartonData.cartonEnd || ''}" /></td>
+                <td><input type="text" class="form-control form-control-sm" name="PackingDetails[${rowIndex-1}].SizeName" value="${cartonData.sizeName || ''}" /></td>
+                <td><input type="text" class="form-control form-control-sm" name="PackingDetails[${rowIndex-1}].Ratio" value="${cartonData.ratio || ''}" /></td>
+                <td><input type="text" class="form-control form-control-sm" name="PackingDetails[${rowIndex-1}].ArticleNo" value="${cartonData.articleNo || ''}" /></td>
+                <td><input type="number" class="form-control form-control-sm" name="PackingDetails[${rowIndex-1}].PcsPack" value="${cartonData.pcsPack || ''}" /></td>
+                <td><input type="number" class="form-control form-control-sm" name="PackingDetails[${rowIndex-1}].PacCarton" value="${cartonData.pacCarton || ''}" /></td>
+                <td><input type="number" class="form-control form-control-sm" name="PackingDetails[${rowIndex-1}].OrderQtyPcs" value="${cartonData.orderQty || ''}" /></td>
+                <td><input type="number" class="form-control form-control-sm" name="PackingDetails[${rowIndex-1}].TotalPcsSize" value="${cartonData.totalPcs || ''}" /></td>
+                <td><input type="number" class="form-control form-control-sm" name="PackingDetails[${rowIndex-1}].TotalPacs" value="${cartonData.totalPacs || ''}" /></td>
+                <td><input type="number" step="0.01" class="form-control form-control-sm" name="PackingDetails[${rowIndex-1}].GWt" value="${cartonData.gWt || ''}" /></td>
+                <td><input type="number" step="0.01" class="form-control form-control-sm" name="PackingDetails[${rowIndex-1}].NWt" value="${cartonData.nWt || ''}" /></td>
+                <td><input type="number" step="0.01" class="form-control form-control-sm" name="PackingDetails[${rowIndex-1}].TotalGWt" value="${cartonData.totalGWt || ''}" /></td>
+                <td><input type="number" step="0.01" class="form-control form-control-sm" name="PackingDetails[${rowIndex-1}].TotalNWt" value="${cartonData.totalNWt || ''}" /></td>
+                <td><input type="number" step="0.01" class="form-control form-control-sm" name="PackingDetails[${rowIndex-1}].Length" value="${cartonData.length || ''}" /></td>
+                                <td><input type="number" step="0.01" class="form-control form-control-sm" name="PackingDetails[${rowIndex-1}].Weight" value="${cartonData.weight || ''}" /></td>
+                                                <td><input type="number" step="0.01" class="form-control form-control-sm" name="PackingDetails[${rowIndex-1}].Height" value="${cartonData.height || ''}" /></td>
+                                                                <td><input type="number" step="0.01" class="form-control form-control-sm" name="PackingDetails[${rowIndex-1}].CBM" value="${cartonData.CBM || ''}" /></td>
+            </tr>
+        `;
+        tableBody.insertAdjacentHTML('beforeend', newRow);
+    }
+
+    // Add Row button - opens modal
+    document.getElementById('addRowBtn').addEventListener('click', function() {
+        openModal();
+    });
+
+    // Remove Row button
+    document.getElementById('removeRowBtn').addEventListener('click', function() {
+        const tableBody = document.getElementById('packingTableBody');
+        if (tableBody.rows.length > 1) {
+            tableBody.deleteRow(tableBody.rows.length - 1);
+            rowIndex--;
+        }
+    });
+
+    // Close modal when clicking on backdrop
+    document.getElementById('modalBackdrop').addEventListener('click', closeModal);
+</script>
