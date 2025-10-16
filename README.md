@@ -11,12 +11,12 @@ RMG Shipping Documents project build with .NET Core and MVC pattern.
 
 ---
 
-## Screenshots / UI Preview
+## UI Preview
 
-Screenshots are stored in `wwwroot/screenshots` folder:
+Screenshots are stored in `wwwroot/images` folder:
 
 ### Homepage
-![Homepage Preview](wwwroot/screenshots/homepage_preview.png)
+![Homepage Preview](wwwroot/images/homepage_preview.png)
 
 
 ---
