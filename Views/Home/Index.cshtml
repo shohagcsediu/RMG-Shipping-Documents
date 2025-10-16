@@ -1,8 +1,67 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container py-5">
+    <!-- Header -->
+    <div class="text-center mb-5">
+        <h2 class="fw-bold mb-2">RMG Shipping Documents</h2>
+    </div>
+
+    <!-- Grid Section -->
+    <div class="row g-4 justify-content-center">
+        <!-- Packing List -->
+        <div class="col-md-4 col-sm-6">
+            <a href="/PackingList" class="card text-decoration-none text-white hover-card h-100">
+                <div class="card-body text-center py-5" style="background-color:#007bff; border-radius:12px;">
+                    <div class="display-4 mb-3">📦</div>
+                    <h5 class="fw-semibold mb-2">Packing List</h5>
+                    <p class="small">Manage packing details, carton information.</p>
+                </div>
+            </a>
+        </div>
+
+        <!-- Delivery Challan -->
+        <div class="col-md-4 col-sm-6">
+            <a href="/DeliveryChallan" class="card text-decoration-none text-white hover-card h-100">
+                <div class="card-body text-center py-5" style="background-color:#28a745; border-radius:12px;">
+                    <div class="display-4 mb-3">🚚</div>
+                    <h5 class="fw-semibold mb-2">Delivery Challan</h5>
+                    <p class="small">Generate and track delivery challans for shipments.</p>
+                </div>
+            </a>
+        </div>
+
+        <!-- Gate Pass -->
+        <div class="col-md-4 col-sm-6">
+            <a href="/GatePass" class="card text-decoration-none text-white hover-card h-100">
+                <div class="card-body text-center py-5" style="background-color:#ffc107; border-radius:12px;">
+                    <div class="display-4 mb-3">🚪</div>
+                    <h5 class="fw-semibold mb-2">Gate Pass</h5>
+                    <p class="small">Control entry/exit records.</p>
+                </div>
+            </a>
+        </div>
+    </div>
 </div>
+
+<style>
+    body {
+        background-color: #f4f6f9;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    h2 {
+        color: #2c3e50;
+    }
+
+    /* Hover effect for cards */
+    .hover-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    }
+
+    a.card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+</style>
