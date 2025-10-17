@@ -149,3 +149,22 @@ CREATE TABLE DeliveryChallan(
 
 
 
+CREATE TABLE Gatepass(
+    Id INT PRIMARY KEY IDENTITY,
+    GatePassNo NVARCHAR(50),
+    Date DATE,
+    CompanyName NVARCHAR(255),
+    Address NVARCHAR(500),
+    IssuedTo NVARCHAR(100),
+    TruckNo NVARCHAR(50),
+    DriverName NVARCHAR(100),
+    TransportCompany  NVARCHAR(255), 
+    MobileNo  NVARCHAR(50),
+    LicenseNo  NVARCHAR(50),    
+    Remarks NVARCHAR(500),
+    CreatedDate DATETIME,
+    CreatedBy NVARCHAR(100),
+    ModifiedDate DATETIME,
+    ModifiedBy NVARCHAR(100)
+);
+

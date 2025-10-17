@@ -1,0 +1,419 @@
+﻿@model RMG_Shipping_Documents.Models.Gatepass
+
+@{
+    ViewData["Title"] = Model.Id > 0 ? "Edit Gatepass" : "Create New Gatepass";
+    var isEdit = Model.Id > 0;
+    var truckNumbers = ViewBag.TruckNumbers as List<string> ?? new List<string>();
+}
+
+<style>
+    .section-header {
+        background-color: #17a2b8;
+        color: white;
+        padding: 8px 12px;
+        font-weight: bold;
+        margin-top: 20px;
+        margin-bottom:10px;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-label {
+        display: inline-block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+    }
+
+    .form-control {
+        display: block;
+        width: 100%;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    }
+
+    .form-select {
+        display: block;
+        width: 100%;
+        padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M1 6l8 8 8-8'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 16px 12px;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    }
+
+    .btn {
+        display: inline-block;
+        font-weight: 400;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        user-select: none;
+        border: 1px solid transparent;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        border-radius: 0.25rem;
+        transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    }
+
+    .btn-primary {
+        color: #fff;
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+    .btn-secondary {
+        color: #fff;
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+
+    .text-danger {
+        color: #dc3545 !important;
+    }
+
+    .validation-summary-valid {
+        display: none;
+    }
+
+    .validation-summary-errors {
+        color: #dc3545;
+        margin-bottom: 1rem;
+    }
+
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-right: -15px;
+        margin-left: -15px;
+    }
+
+    .col-md-6 {
+        flex: 0 0 auto;
+        width: 50%;
+    }
+
+    .col-md-12 {
+        flex: 0 0 auto;
+        width: 100%;
+    }
+
+    .mt-3 {
+        margin-top: 1rem !important;
+    }
+
+    .mb-3 {
+        margin-bottom: 1rem !important;
+    }
+    
+    .section-title {
+        background: #e9ecef;
+        padding: 8px 15px;
+        border-radius: 5px;
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 15px;
+        font-size: 14px;
+    }
+    
+    .table-responsive {
+        overflow-x: auto;
+    }
+    
+    .table {
+        width: 100%;
+        margin-bottom: 1rem;
+        color: #212529;
+        border-collapse: collapse;
+    }
+    
+    .table th, .table td {
+        padding: 0.75rem;
+        vertical-align: top;
+        border-top: 1px solid #dee2e6;
+    }
+    
+    .table thead th {
+        vertical-align: bottom;
+        border-bottom: 2px solid #dee2e6;
+        border-top: none;
+    }
+    
+    .table-bordered {
+        border: 1px solid #dee2e6;
+    }
+    
+    .table-bordered th, .table-bordered td {
+        border: 1px solid #dee2e6;
+    }
+    
+    .table-dark {
+        color: #fff;
+        background-color: #343a40;
+    }
+    
+    .table-dark th, .table-dark td {
+        border-color: #454d55;
+    }
+    
+    .badge {
+        display: inline-block;
+        padding: 0.25em 0.4em;
+        font-size: 75%;
+        font-weight: 700;
+        line-height: 1;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
+        border-radius: 0.25rem;
+    }
+    
+    .bg-warning {
+        background-color: #ffc107 !important;
+    }
+    
+    .bg-primary {
+        background-color: #007bff !important;
+    }
+    
+    .bg-success {
+        background-color: #28a745 !important;
+    }
+    
+    .bg-danger {
+        background-color: #dc3545 !important;
+    }
+    
+    .bg-secondary {
+        background-color: #6c757d !important;
+    }
+    
+    .text-dark {
+        color: #212529 !important;
+    }
+    
+    .loading {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(255,255,255,.3);
+        border-radius: 50%;
+        border-top-color: #fff;
+        animation: spin 1s ease-in-out infinite;
+    }
+</style>
+
+<div class="section-header d-flex justify-content-between align-items-center">
+    <span>@(isEdit ? "Edit Gatepass" : "Create New Gatepass")</span>
+</div>
+
+<form asp-action="@(isEdit ? "Edit" : "Create")" method="post">
+    <div asp-validation-summary="ModelOnly" class="validation-summary-errors text-danger"></div>
+
+    @if (isEdit)
+    {
+        <input type="hidden" asp-for="Id" />
+    }
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="GatePassNo" class="form-label">GatePass No</label>
+                <input asp-for="GatePassNo" class="form-control" />
+                <span asp-validation-for="GatePassNo" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="Date" class="form-label"></label>
+                <input asp-for="Date" class="form-control" type="date" />
+                <span asp-validation-for="Date" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="CompanyName" class="form-label">Company Name</label>
+                <input asp-for="CompanyName" class="form-control" />
+                <span asp-validation-for="CompanyName" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="Address" class="form-label"></label>
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="IssuedTo" class="form-label"></label>
+                <input asp-for="IssuedTo" class="form-control" />
+                <span asp-validation-for="IssuedTo" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="TruckNo" class="form-label">Truck No</label>
+                <select asp-for="TruckNo" class="form-select" id="truckNoSelect">
+                    <option value="">-- Select Truck --</option>
+                    @if (truckNumbers != null && truckNumbers.Count > 0)
+                    {
+                        foreach (var truck in truckNumbers)
+                        {
+                            <option value="@truck">@truck</option>
+                        }
+                    }
+                </select>
+                <span asp-validation-for="TruckNo" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="DriverName" class="form-label">Driver name</label>
+                <input asp-for="DriverName" class="form-control" id="driverNameInput" />
+                <span asp-validation-for="DriverName" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="TransportCompany" class="form-label">Transport company name</label>
+                <input asp-for="TransportCompany" class="form-control" id="transportCompanyInput" />
+                <span asp-validation-for="TransportCompany" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="MobileNo" class="form-label">Driver phone</label>
+                <input asp-for="MobileNo" class="form-control" id="mobileNoInput" />
+                <span asp-validation-for="MobileNo" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="LicenseNo" class="form-label">Driver license</label>
+                <input asp-for="LicenseNo" class="form-control" id="licenseNoInput" />
+                <span asp-validation-for="LicenseNo" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label asp-for="Remarks" class="form-label"></label>
+                <textarea asp-for="Remarks" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Remarks" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-title">Delivery Challans for Selected Truck</div>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>Challan No</th>
+                    <th>Date</th>
+                    <th>Recipient</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="deliveryChallansTableBody">
+                <tr>
+                    <td colspan="4" class="text-center">Select a truck to view delivery challans.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="form-group mt-3">
+        <input type="submit" value="@(isEdit ? "Update" : "Submit")" class="btn btn-primary" />
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const truckNoSelect = document.getElementById('truckNoSelect');
+            const driverNameInput = document.getElementById('driverNameInput');
+            const transportCompanyInput = document.getElementById('transportCompanyInput');
+            const mobileNoInput = document.getElementById('mobileNoInput');
+            const licenseNoInput = document.getElementById('licenseNoInput');
+            const deliveryChallansTableBody = document.getElementById('deliveryChallansTableBody');
+            
+            // Handle truck selection change
+            truckNoSelect.addEventListener('change', function() {
+                const selectedTruckNo = this.value;
+                
+                if (!selectedTruckNo) {
+                    // Clear all fields if no truck is selected
+                    driverNameInput.value = '';
+                    transportCompanyInput.value = '';
+                    mobileNoInput.value = '';
+                    licenseNoInput.value = '';
+                    
+                    // Reset delivery challans table
+                    deliveryChallansTableBody.innerHTML = '<tr><td colspan="4" class="text-center">Select a truck to view delivery challans.</td></tr>';
+                    return;
+                }
+                
+                // Show loading indicator
+                deliveryChallansTableBody.innerHTML = '<tr><td colspan="4" class="text-center"><div class="loading"></div> Loading...</td></tr>';
+                
+                // Fetch truck details
+                fetch(`/Gatepass/GetTruckDetails?truckNo=${encodeURIComponent(selectedTruckNo)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            driverNameInput.value = data.driverName || '';
+                            transportCompanyInput.value = data.transportCompany || '';
+                            mobileNoInput.value = data.mobileNo || '';
+                            licenseNoInput.value = data.licenseNo || '';
+                        }
+                    })
+                    .catch(error => console.error('Error fetching truck details:', error));
+                
+                // Fetch delivery challans for the selected truck
+                fetch(`/Gatepass/GetDeliveryChallansForTruck?truckNo=${encodeURIComponent(selectedTruckNo)}`)
+                    .then(response => response.text())
+                    .then(html => {
+                        deliveryChallansTableBody.innerHTML = html;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching delivery challans:', error);
+                        deliveryChallansTableBody.innerHTML = '<tr><td colspan="4" class="text-center">Error loading delivery challans.</td></tr>';
+                    });
+            });
+        });
+    </script>
+}

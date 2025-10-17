@@ -15,6 +15,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<PackingService>();
 builder.Services.AddScoped<ExcelTemplateService>();
 builder.Services.AddScoped<DeliveryChallanService>();
+builder.Services.AddScoped<GatepassService>();
+
 
 
 var app = builder.Build();

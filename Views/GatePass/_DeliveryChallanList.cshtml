@@ -1,0 +1,43 @@
+﻿@model IEnumerable<RMG_Shipping_Documents.Models.DeliveryChallan>
+
+@{
+    Layout = null;
+}
+
+@if (Model != null && Model.Any())
+{
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.ChallanNo</td>
+            <td>@item.Date.ToString("dd/MM/yyyy")</td>
+            <td>@item.Recipient</td>
+            <td>
+                @switch (item.Status)
+                {
+                    case "Pending":
+                        <span class="badge bg-warning text-dark">@item.Status</span>
+                        break;
+                    case "In Progress":
+                        <span class="badge bg-primary">@item.Status</span>
+                        break;
+                    case "Completed":
+                        <span class="badge bg-success">@item.Status</span>
+                        break;
+                    case "Cancelled":
+                        <span class="badge bg-danger">@item.Status</span>
+                        break;
+                    default:
+                        <span class="badge bg-secondary">@item.Status</span>
+                        break;
+                }
+            </td>
+        </tr>
+    }
+}
+else
+{
+    <tr>
+        <td colspan="4" class="text-center">No delivery challans found for this truck.</td>
+    </tr>
+}
