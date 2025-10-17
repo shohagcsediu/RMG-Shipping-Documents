@@ -14,5 +14,7 @@ namespace RMG_Shipping_Documents.Data
         public DbSet<PackingDetails> PackingDetails { get; set; }
 
         public DbSet<Template> ExcelTemplates { get; set; }
+
+        public DbSet<DeliveryChallan> DeliveryChallan { get; set; }
     }
 }

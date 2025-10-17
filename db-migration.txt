@@ -119,7 +119,33 @@ CREATE TABLE PackingDeclaration(
 );
 
 
-
+CREATE TABLE DeliveryChallan(
+    Id INT PRIMARY KEY IDENTITY,
+    ChallanNo NVARCHAR(50),
+    Date DATE,
+    Recipient NVARCHAR(100),
+    Address NVARCHAR(255),
+    TruckCBM NVARCHAR(255),
+    AgdlCBM NVARCHAR(255),    
+    Driver NVARCHAR(100),
+    TruckNo NVARCHAR(50),
+    MobileNo  NVARCHAR(50),
+    LicenseNo  NVARCHAR(50),
+    DepoteName NVARCHAR(255),
+    LockNo NVARCHAR(255),
+    InDate DATETIME,
+    OutDate DATETIME,
+    TransportCompany NVARCHAR(255),
+    DescriptionGoods NVARCHAR(500),
+    Unit NVARCHAR(255),
+    Quanitity INT,
+    Notes NVARCHAR(500),
+    Status NVARCHAR(50),
+    CreatedDate DATETIME,
+    CreatedBy NVARCHAR(100),
+    ModifiedDate DATETIME,
+    ModifiedBy NVARCHAR(100)
+);
 
 
 
