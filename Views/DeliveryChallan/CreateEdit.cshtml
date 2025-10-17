@@ -173,73 +173,6 @@
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
-                <label asp-for="Driver" class="form-label"></label>
-                <input asp-for="Driver" class="form-control" />
-                <span asp-validation-for="Driver" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                <label asp-for="TruckNo" class="form-label"></label>
-                <input asp-for="TruckNo" class="form-control" />
-                <span asp-validation-for="TruckNo" class="text-danger"></span>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-6">
-            <div class="form-group">
-                <label asp-for="Status" class="form-label"></label>
-                <select asp-for="Status" class="form-select">
-                    <option value="Pending">Pending</option>
-                    <option value="In Progress">In Progress</option>
-                    <option value="Completed">Completed</option>
-                    <option value="Cancelled">Cancelled</option>
-                </select>
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                <label asp-for="TransportCompany" class="form-label"></label>
-                <input asp-for="TransportCompany" class="form-control" />
-                <span asp-validation-for="TransportCompany" class="text-danger"></span>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-6">
-            <div class="form-group">
-                <label asp-for="InDate" class="form-label">In Date</label>
-                <input asp-for="InDate" class="form-control" type="datetime-local" />
-                <span asp-validation-for="InDate" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                <label asp-for="OutDate" class="form-label">Out Date</label>
-                <input asp-for="OutDate" class="form-control" type="datetime-local" />
-                <span asp-validation-for="OutDate" class="text-danger"></span>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-12">
-            <div class="form-group">
-                <label asp-for="Notes" class="form-label"></label>
-                <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
-                <span asp-validation-for="Notes" class="text-danger"></span>
-            </div>
-        </div>
-    </div>
-
-    <!-- NEW FIELDS ADDED AFTER NOTES -->
-    <div class="row">
-        <div class="col-md-6">
-            <div class="form-group">
                 <label asp-for="TruckCBM" class="form-label">Truck CBM</label>
                 <input asp-for="TruckCBM" class="form-control" />
                 <span asp-validation-for="TruckCBM" class="text-danger"></span>
@@ -250,6 +183,23 @@
                 <label asp-for="AgdlCBM" class="form-label">AGDL CBM</label>
                 <input asp-for="AgdlCBM" class="form-control" />
                 <span asp-validation-for="AgdlCBM" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="Driver" class="form-label"></label>
+                <input asp-for="Driver" class="form-control" />
+                <span asp-validation-for="Driver" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="TruckNo" class="form-label"></label>
+                <input asp-for="TruckNo" class="form-control" />
+                <span asp-validation-for="TruckNo" class="text-danger"></span>
             </div>
         </div>
     </div>
@@ -291,26 +241,83 @@
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
-                <label asp-for="DescriptionGoods" class="form-label">Description of Goods</label>
-                <textarea asp-for="DescriptionGoods" class="form-control" rows="3"></textarea>
-                <span asp-validation-for="DescriptionGoods" class="text-danger"></span>
+                <label asp-for="InDate" class="form-label">In Date</label>
+                <input asp-for="InDate" class="form-control" type="datetime-local" />
+                <span asp-validation-for="InDate" class="text-danger"></span>
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                <label asp-for="Unit" class="form-label">Unit</label>
-                <input asp-for="Unit" class="form-control" />
-                <span asp-validation-for="Unit" class="text-danger"></span>
+                <label asp-for="OutDate" class="form-label">Out Date</label>
+                <input asp-for="OutDate" class="form-control" type="datetime-local" />
+                <span asp-validation-for="OutDate" class="text-danger"></span>
             </div>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label asp-for="TransportCompany" class="form-label"></label>
+                <input asp-for="TransportCompany" class="form-control" />
+                <span asp-validation-for="TransportCompany" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+ 
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label asp-for="DescriptionGoods" class="form-label">Description of Goods</label>
+                <textarea asp-for="DescriptionGoods" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="DescriptionGoods" class="text-danger"></span>
+            </div>
+        </div>        
+    </div>
+   
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="Unit" class="form-label">Unit</label>
+                @* <input asp-for="Unit" class="form-control" /> *@
+                <select asp-for="Unit" class="form-select">
+                    <option value="">-- Select Unit --</option>
+                    <option value="Meter">Meter</option>
+                    <option value="Kg">Kg</option>
+                    <option value="Sft">Sft</option>
+                    <option value="Ton">Ton</option>
+                </select>
+                <span asp-validation-for="Unit" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="col-md-4">
             <div class="form-group">
                 <label asp-for="Quanitity" class="form-label">Quantity</label>
                 <input asp-for="Quanitity" class="form-control" type="number" />
                 <span asp-validation-for="Quanitity" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="Status" class="form-label"></label>
+                <select asp-for="Status" class="form-select">
+                    <option value="Pending">Pending</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Cancelled">Cancelled</option>
+                </select>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label asp-for="Notes" class="form-label">Remarks</label>
+                <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Notes" class="text-danger"></span>
             </div>
         </div>
     </div>
