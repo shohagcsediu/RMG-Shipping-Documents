@@ -1,0 +1,125 @@
+-- Main Packing List Table
+
+CREATE TABLE PackingList (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Company NVARCHAR(200),
+    BuyerName NVARCHAR(200),
+    Style NVARCHAR(200),
+    PO NVARCHAR(200),
+    StyleBuyer NVARCHAR(200),
+    ShippedBy NVARCHAR(200),
+    ShortDescription NVARCHAR(500),
+    Size NVARCHAR(100),
+    Color NVARCHAR(100),
+    Brand NVARCHAR(200),
+    Packing NVARCHAR(200),
+    PcsPerSet NVARCHAR(100),
+    ProductNo NVARCHAR(200),
+    CountryOfOrigin NVARCHAR(200),
+    PortOfLoading NVARCHAR(200),
+    CountryOfDestination NVARCHAR(200),
+    PortOfDischarge NVARCHAR(200),
+    Incoterm NVARCHAR(100),
+    ORMSNo NVARCHAR(200),
+    LMPONo NVARCHAR(200),
+    ORMSStyleNo NVARCHAR(200),
+    Status NVARCHAR(50),
+    
+    -- Buyer Specific Fields
+    ItemNo NVARCHAR(200),
+    POD NVARCHAR(200),
+    BOI NVARCHAR(200),
+    WWHK NVARCHAR(200),
+    NoOfColor NVARCHAR(100),
+    KeyCode NVARCHAR(200),
+    SupplierCode NVARCHAR(200),
+    
+    -- Summary Fields
+    Cartons INT,
+    OrderQtyPac INT,
+    OrderQtyPcs INT,
+    ShipQtyPac INT,
+    ShipQtyPcs INT,
+    Destination NVARCHAR(200),
+
+    SerialNO INT,
+    SizeName NVARCHAR(200),
+    OrderQty NVARCHAR(200),
+    ActualShipment INT,
+    Variant NVARCHAR(200),
+    Percentage INT,
+
+    TotalGWeight INT,
+    TotalNWeight INT,
+    TotalCBM INT,
+    
+    -- Audit Fields
+    CreatedDate DATETIME DEFAULT GETDATE(),
+    CreatedBy NVARCHAR(100),
+    UpdatedDate DATETIME,
+    UpdatedBy NVARCHAR(100)
+);
+
+
+CREATE TABLE PackingDetails (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    PackingListId INT NOT NULL,
+    SL INT,
+    NoOfCarton INT,
+    CartonStart NVARCHAR(50),
+    CartonEnd NVARCHAR(50),
+    SizeName NVARCHAR(100),
+    Ratio NVARCHAR(100),
+    ArticleNo NVARCHAR(200),
+    PcsPack INT,
+    PacCarton INT,
+    OrderQtyPcs INT,
+    TotalPcsSize INT,
+    TotalPacs INT,
+    GWt DECIMAL(18, 2),
+    NWt DECIMAL(18, 2),
+    TotalGWt DECIMAL(18, 2),
+    TotalNWt DECIMAL(18, 2),
+    Length DECIMAL(18, 2),
+    Weight DECIMAL(18, 2),
+    Height DECIMAL(18, 2),
+    CBM DECIMAL(18, 4),
+    
+    FOREIGN KEY (PackingListId) REFERENCES PackingList(Id) ON DELETE CASCADE
+ );
+
+
+// for faster queries doing indexing:
+CREATE INDEX IX_PackingDetails_PackingListId ON PackingDetails(PackingListId);
+
+
+
+
+CREATE TABLE ExcelTemplates (
+    Id INT PRIMARY KEY IDENTITY,
+    TemplateName NVARCHAR(100),
+    FilePath NVARCHAR(200),
+    IsDefault BIT
+);
+
+
+
+
+CREATE TABLE PackingDeclarationSetting(
+    Id INT PRIMARY KEY IDENTITY,
+    BuyerId NVARCHAR(100),
+    Question NVARCHAR(600),
+);
+
+CREATE TABLE PackingDeclaration(
+    Id INT PRIMARY KEY IDENTITY,
+    BuyerId NVARCHAR(100),
+    QuestionId NVARCHAR(600),
+    Answer NVARCHAR(600),
+);
+
+
+
+
+
+

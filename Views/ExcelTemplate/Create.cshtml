@@ -1,0 +1,71 @@
+﻿@model RMG_Shipping_Documents.Models.Template
+
+@{
+    ViewData["Title"] = "Create Excel Template";
+}
+<h2>Create Packing Template for buyer: Next source ltd</h2>
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+    <div class="row mb-3 align-items-end">
+        <div class="col-md-6">
+            <label class="form-label">Template Name</label>
+            <input asp-for="TemplateName" class="form-control" />
+            <span asp-validation-for="TemplateName" class="text-danger"></span>
+
+            <!-- Dropdown below Template Name -->
+            <div class="mt-2">
+                <label class="form-label">Excel Mail Merge Field</label>
+                <select class="form-select" name="excelMergeField">
+                    <option value="">Select a field</option>
+                    <option value="CustomerName">Customer Name</option>
+                    <option value="OrderNumber">Order Number</option>
+                    <option value="ProductName">Product Name</option>
+                    <option value="Quantity">Quantity</option>
+                    <option value="Price">Price</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Upload Excel Template (.xlsx)</label>
+            <input type="file" name="uploadedFile" class="form-control" accept=".xlsx" />
+            <span asp-validation-for="FilePath" class="text-danger"></span>
+
+            <!-- Dropdown below Upload Excel -->
+            <div class="mt-2">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <label class="form-label">Form Field</label>
+                        <select class="form-select" name="formField">
+                            <option value="">Select a field</option>
+                            <option value="PackingDate">Packing Date</option>
+                            <option value="ShipmentType">Shipment Type</option>
+                            <option value="Warehouse">Warehouse</option>
+                            <option value="Status">Status</option>
+                            <option value="Notes">Notes</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-check mt-4">
+                            <input class="form-check-input" type="checkbox" name="isRecurring" id="isRecurring">
+                            <label class="form-check-label" for="isRecurring">
+                                Recurring data
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <button type="button" class="btn btn-primary" onclick="addRow()">
+                <i class="bi bi-plus-circle"></i> Add Row
+            </button>
+        </div>
+    </div>
+    <div class="form-check mb-3">
+        <input asp-for="IsDefault" class="form-check-input" />
+        <label class="form-check-label">Set as Active</label>
+    </div>
+    <button type="submit" class="btn btn-success">Submit</button>
+    <a asp-action="Index" class="btn btn-secondary">Back to template list</a>
+</form>

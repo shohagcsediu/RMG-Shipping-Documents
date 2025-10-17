@@ -269,9 +269,14 @@
     var isEdit = Model.Id > 0;
 }
 
+
 <div class="section-header-yellow d-flex justify-content-between align-items-center">
     <span>@(isEdit ? "EDIT PACKING LIST" : "CREATE PACKING LIST")</span>
-    <span style="font-weight: normal; font-size: 14px;">⚙️ Packing template setting</span>
+    <a href="/ExcelTemplate?buyerName=@Model.BuyerName"
+       target="_blank"
+       style="font-weight: normal; font-size: 14px; text-decoration: none; color: inherit; cursor: pointer;">
+        ⚙️ Packing template setting
+    </a>
 </div>
 
 <form asp-action="CreateEdit" method="post">
@@ -660,7 +665,7 @@
             </thead>
             <tbody id="summaryTableBody">
                 <tr>
-                    <td><input asp-for="SerialNO" name="" type="number" class="form-control form-control-sm flex-grow-1" /></td>
+                    <td><input asp-for="SerialNO" type="number" class="form-control form-control-sm flex-grow-1" /></td>
                     <td><input asp-for="SizeName" type="text" class="form-control form-control-sm flex-grow-1" /></td>
                     <td><input asp-for="OrderQty" type="text" class="form-control form-control-sm flex-grow-1" /></td>
                     <td><input asp-for="ActualShipment" type="number" class="form-control form-control-sm flex-grow-1" /></td>
@@ -670,51 +675,10 @@
             </tbody>
         </table>
     </div>
+    
+    @* @Html.Partial("_PackingDeclaration", Model) *@
 
-    <div class="section-header mt-4 d-flex justify-content-between align-items-center">
-        <span>Packing Declaration</span>
-        <a href="/Packing/DeclarationSetting" style="font-weight: normal; font-size: 14px; text-decoration: none; color: inherit; cursor: pointer;">
-            ⚙️ Declaration setting
-        </a>
-    </div>
-    <div class="table-responsive mt-2">
-        <table class="table table-bordered declaration-table">
-            <thead>
-                <tr>
-                    <th style="width: 10%;"></th>
-                    <th style="width: 45%;">Question</th>
-                    <th style="width: 45%;">Answer</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Have unacceptable packaging materials or bamboo products been used as packaging or dunnage in the consignment covered by this document?</td>
-                    <td><input type="text" class="form-control form-control-sm" name="Declaration1" /></td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Has solid timber packaging/dunnage been used in consignments covered by this document?</td>
-                    <td><input type="text" class="form-control form-control-sm" name="Declaration2" /></td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>All timber packaging/dunnage used in the consignment has been (Please indicate below) Treated in compliance with Department of Agriculture and Water Resources treatment requirements</td>
-                    <td><input type="text" class="form-control form-control-sm" name="Declaration3" /></td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td>statement to be removed from document when not relevant</td>
-                    <td><input type="text" class="form-control form-control-sm" name="Declaration4" /></td>
-                </tr>
-                <tr>
-                    <td>5</td>
-                    <td>Issued Date</td>
-                    <td><input type="date" class="form-control form-control-sm" name="IssuedDate" placeholder="Date Calender" /></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+    <partial name="_PackingDeclaration" model="Model" />
 
     <div class="mt-4 mb-4">
         <button type="submit" class="btn-save">SAVE</button>

@@ -1,0 +1,49 @@
+﻿@model RMG_Shipping_Documents.Models.PackingList
+
+<div class="section-header mt-4 d-flex justify-content-between align-items-center">
+    <span>Packing Declaration</span>
+    <button type="button" class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-bs-target="#declarationSettingsModal">
+        ⚙️ Declaration setting
+    </button>
+</div>
+<div class="table-responsive mt-2">
+    <table class="table table-bordered declaration-table">
+        <thead>
+            <tr>
+                <th style="width: 10%;"></th>
+                <th style="width: 45%;">Question</th>
+                <th style="width: 45%;">Answer</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>Have unacceptable packaging materials or bamboo products been used as packaging or dunnage in the consignment covered by this document?</td>
+                <td><input type="text" class="form-control form-control-sm" name="Declaration1" /></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Has solid timber packaging/dunnage been used in consignments covered by this document?</td>
+                <td><input type="text" class="form-control form-control-sm" name="Declaration2" /></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>All timber packaging/dunnage used in the consignment has been (Please indicate below) Treated in compliance with Department of Agriculture and Water Resources treatment requirements</td>
+                <td><input type="text" class="form-control form-control-sm" name="Declaration3" /></td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>statement to be removed from document when not relevant</td>
+                <td><input type="text" class="form-control form-control-sm" name="Declaration4" /></td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>Issued Date</td>
+                <td><input type="date" class="form-control form-control-sm" name="IssuedDate" placeholder="Date Calender" /></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Include the declaration settings modal -->
+@Html.Partial("_DeclarationSettingsModal", Model)

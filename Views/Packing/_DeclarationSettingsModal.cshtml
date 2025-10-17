@@ -1,0 +1,273 @@
+﻿@model RMG_Shipping_Documents.Models.PackingList
+
+<!-- Modal Structure -->
+<div class="modal fade" id="declarationSettingsModal" tabindex="-1" aria-labelledby="declarationSettingsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title" id="declarationSettingsModalLabel">Declaration Settings</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <style>
+                    .settings-container {
+                        max-width: 100%;
+                        margin: 0 auto;
+                        background: white;
+                    }
+
+                    .buyer-section {
+                        margin-bottom: 20px;
+                        padding-bottom: 15px;
+                        border-bottom: 2px solid #e9ecef;
+                    }
+
+                    .buyer-label {
+                        font-weight: 600;
+                        color: #495057;
+                        margin-bottom: 8px;
+                    }
+
+                    .buyer-display {
+                        font-size: 16px;
+                        padding: 8px 12px;
+                        background-color: #f8f9fa;
+                        border: 1px solid #dee2e6;
+                        border-radius: 4px;
+                        color: #495057;
+                    }
+
+                    .question-item {
+                        background: #f8f9fa;
+                        border: 1px solid #dee2e6;
+                        border-radius: 6px;
+                        padding: 15px;
+                        margin-bottom: 15px;
+                        position: relative;
+                        margin-right: 40px;
+                    }
+
+                        .question-item:hover {
+                            background: #e9ecef;
+                            transition: background 0.2s;
+                        }
+
+                    .question-number {
+                        display: inline-block;
+                        background: #17a2b8;
+                        color: white;
+                        width: 30px;
+                        height: 30px;
+                        border-radius: 50%;
+                        text-align: center;
+                        line-height: 30px;
+                        font-weight: 600;
+                        margin-right: 10px;
+                    }
+
+                    .question-input {
+                        width: calc(100% - 50px);
+                        display: inline-block;
+                    }
+
+                    .remove-btn {
+                        position: absolute;
+                        right: -35px;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        background: #dc3545;
+                        color: white;
+                        border: none;
+                        border-radius: 50%;
+                        width: 28px;
+                        height: 28px;
+                        cursor: pointer;
+                        font-size: 18px;
+                        line-height: 28px;
+                        padding: 0;
+                        transition: background 0.2s;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+
+                        .remove-btn:hover {
+                            background: #c82333;
+                        }
+
+                    .add-question-btn {
+                        background: #28a745;
+                        color: white;
+                        border: none;
+                        border-radius: 6px;
+                        padding: 10px 20px;
+                        cursor: pointer;
+                        font-weight: 600;
+                        font-size: 16px;
+                        margin-bottom: 20px;
+                        transition: background 0.2s;
+                    }
+
+                        .add-question-btn:hover {
+                            background: #218838;
+                        }
+
+                    .questions-section-title {
+                        font-size: 18px;
+                        font-weight: 600;
+                        color: #495057;
+                        margin-bottom: 15px;
+                    }
+                </style>
+
+                <div class="settings-container">
+                    <!-- Buyer Name Section -->
+                    <div class="buyer-section">
+                        <div class="buyer-label">Buyer Name</div>
+                        <div class="buyer-display" id="buyerNameDisplay">@Model.BuyerName</div>
+                    </div>
+
+                    <!-- Questions Section -->
+                    <div class="questions-section-title">Declaration Questions</div>
+
+                    <div id="questionsContainer">
+                        <!-- Questions will be added here dynamically -->
+                    </div>
+
+                    <button class="add-question-btn" onclick="addQuestion()">+ Add Question</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="submitSettings()">Submit</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let questionCount = 0;
+    let questions = [];
+    let buyerName = '@Model.BuyerName'; // Store buyer name from model
+
+    // Initialize with default questions
+    function initializeDefaultQuestions() {
+        const defaultQuestions = [
+            "Have unacceptable packaging materials or bamboo products been used as packaging or dunnage in the consignment covered by this document?",
+            "Has solid timber packaging/dunnage been used in consignments covered by this document?",
+            "All timber packaging/dunnage used in the consignment has been (Please indicate below) Treated in compliance with Department of Agriculture and Water Resources treatment requirements",
+            "statement to be removed from document when not relevant",
+            "Issued Date"
+        ];
+
+        defaultQuestions.forEach(q => {
+            addQuestion(q);
+        });
+    }
+
+    function addQuestion(defaultText = '') {
+        questionCount++;
+        const questionId = `question_${questionCount}`;
+
+        const questionItem = document.createElement('div');
+        questionItem.className = 'question-item';
+        questionItem.id = questionId;
+
+        questionItem.innerHTML = `
+            <span class="question-number">${questions.length + 1}</span>
+            <input type="text"
+                   class="form-control question-input"
+                   placeholder="Enter question text"
+                   value="${defaultText}"
+                   data-question-id="${questionId}">
+            <button class="remove-btn" onclick="removeQuestion('${questionId}')" title="Remove question">×</button>
+        `;
+
+        document.getElementById('questionsContainer').appendChild(questionItem);
+        questions.push(questionId);
+        updateQuestionNumbers();
+    }
+
+    function removeQuestion(questionId) {
+        const element = document.getElementById(questionId);
+        if (element) {
+            element.remove();
+            questions = questions.filter(id => id !== questionId);
+            updateQuestionNumbers();
+        }
+    }
+
+    function updateQuestionNumbers() {
+        const questionItems = document.querySelectorAll('.question-item');
+        questionItems.forEach((item, index) => {
+            const numberSpan = item.querySelector('.question-number');
+            if (numberSpan) {
+                numberSpan.textContent = index + 1;
+            }
+        });
+    }
+
+    function submitSettings() {
+        const questionInputs = document.querySelectorAll('.question-input');
+
+        const questionsData = [];
+        questionInputs.forEach((input, index) => {
+            if (input.value.trim()) {
+                questionsData.push({
+                    number: index + 1,
+                    text: input.value.trim()
+                });
+            }
+        });
+
+        const settings = {
+            buyerName: buyerName,
+            questions: questionsData
+        };
+
+        console.log('Settings to save:', settings);
+
+        // Here you would typically send this data to your server
+        // For now, we'll just close the modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('declarationSettingsModal'));
+        modal.hide();
+
+        // Show a success message
+        showNotification('Declaration settings saved successfully!');
+    }
+
+    function showNotification(message) {
+        // Create a simple notification
+        const notification = document.createElement('div');
+        notification.className = 'alert alert-success alert-dismissible fade show position-fixed';
+        notification.style.top = '20px';
+        notification.style.right = '20px';
+        notification.style.zIndex = '9999';
+        notification.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+        document.body.appendChild(notification);
+
+        // Auto remove after 3 seconds
+        setTimeout(() => {
+            notification.remove();
+        }, 3000);
+    }
+
+    // Initialize the modal with default questions when it's shown
+    document.addEventListener('DOMContentLoaded', function() {
+        const modalElement = document.getElementById('declarationSettingsModal');
+        if (modalElement) {
+            modalElement.addEventListener('shown.bs.modal', function () {
+                // Clear previous questions
+                document.getElementById('questionsContainer').innerHTML = '';
+                questions = [];
+                questionCount = 0;
+
+                // Initialize with default questions
+                initializeDefaultQuestions();
+            });
+        }
+    });
+</script>
