@@ -40,7 +40,7 @@ namespace RMG_Shipping_Documents.Controllers
             return View();
         }
 
-        // POST: ExcelTemplate/Create
+        // POST: ExcelTemplate/Create to create template
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(Template template, IFormFile file, string buyerName, string packingListId,
@@ -268,7 +268,7 @@ namespace RMG_Shipping_Documents.Controllers
             }
         }
 
-        // POST: ExcelTemplate/SetDefault
+        // POST: ExcelTemplate/SetDefault to select a template as default
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult SetDefault(int id)
@@ -300,7 +300,7 @@ namespace RMG_Shipping_Documents.Controllers
             }
         }
 
-        // GET: ExcelTemplate/Download/5
+        // GET: ExcelTemplate/Download/5 to download template
         public IActionResult Download(int id, int packingListId)
         {
             try

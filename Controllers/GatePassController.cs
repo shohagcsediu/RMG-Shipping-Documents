@@ -21,7 +21,7 @@ namespace RMG_Shipping_Documents.Controllers
             return View(gatepasses);
         }
 
-        // GET: Gatepass/Create
+        // GET: Gatepass/Create move to ui for creating
         public IActionResult Create()
         {
             var model = new Gatepass
@@ -33,7 +33,7 @@ namespace RMG_Shipping_Documents.Controllers
             return View("CreateEdit", model);
         }
 
-        // POST: Gatepass/Create
+        // POST: Gatepass/Create to create gatepass with its values using service class insert method
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(Gatepass model)
@@ -59,7 +59,7 @@ namespace RMG_Shipping_Documents.Controllers
             return View("CreateEdit", model);
         }
 
-        // GET: Gatepass/Edit/5
+        // GET: Gatepass/Edit/5 to edit gate pass data check truck
         public IActionResult Edit(int id)
         {
             var gatepass = _gatepassService.GetById(id);
@@ -72,7 +72,7 @@ namespace RMG_Shipping_Documents.Controllers
             return View("CreateEdit", gatepass);
         }
 
-        // POST: Gatepass/Edit/5
+        // POST: Gatepass/Edit/5 to edit/update gatepass data
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(Gatepass model)
@@ -98,7 +98,7 @@ namespace RMG_Shipping_Documents.Controllers
             return View("CreateEdit", model);
         }
 
-        // GET: Gatepass/Details/5
+        // GET: Gatepass/Details/5 to get details gatepass data
         public IActionResult Details(int id)
         {
             var gatepass = _gatepassService.GetById(id);
@@ -110,7 +110,7 @@ namespace RMG_Shipping_Documents.Controllers
             return View(gatepass);
         }
 
-        // GET: Gatepass/Delete/5
+        // GET: Gatepass/Delete/5 before delete show json specific gatepass data
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
@@ -124,7 +124,7 @@ namespace RMG_Shipping_Documents.Controllers
         }
 
 
-        // POST: Gatepass/Delete/5
+        // POST: Gatepass/Delete/5 finally to delete the gatepass
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
@@ -141,7 +141,7 @@ namespace RMG_Shipping_Documents.Controllers
             }
         }
 
-        // POST: Gatepass/DeleteAjax/5
+        // POST: Gatepass/DeleteAjax/5 to show delete popup details about the gate pass
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteAjax(int id)
@@ -163,7 +163,7 @@ namespace RMG_Shipping_Documents.Controllers
             }
         }
 
-        // GET: Gatepass/GetTruckDetails
+        // GET: Gatepass/Get Truck Details
         [HttpGet]
         public IActionResult GetTruckDetails(string truckNo)
         {
@@ -190,7 +190,7 @@ namespace RMG_Shipping_Documents.Controllers
             }
         }
 
-        // GET: Gatepass/GetDeliveryChallansForTruck
+        // GET: Gatepass/GetDelivery Challans For Truck
         [HttpGet]
         public IActionResult GetDeliveryChallansForTruck(string truckNo)
         {

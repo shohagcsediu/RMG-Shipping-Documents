@@ -14,7 +14,7 @@ namespace RMG_Shipping_Documents.Controllers
             _deliveryChallanService = deliveryChallanService;
         }
 
-        // GET: DeliveryChallan
+        // GET: DeliveryChallan index
         public IActionResult Index()
         {
             var challans = _deliveryChallanService.GetAll();
@@ -33,7 +33,7 @@ namespace RMG_Shipping_Documents.Controllers
             return View("CreateEdit", model);
         }
 
-        // POST: DeliveryChallan/Create
+        // POST: DeliveryChallan/Create to create a delivery challan
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(DeliveryChallan model)
@@ -59,7 +59,7 @@ namespace RMG_Shipping_Documents.Controllers
             return View("CreateEdit", model);
         }
 
-        // GET: DeliveryChallan/Edit/5
+        // GET: DeliveryChallan/Edit/5 valid check and move to ui
         public IActionResult Edit(int id)
         {
             var challan = _deliveryChallanService.GetById(id);
@@ -71,7 +71,7 @@ namespace RMG_Shipping_Documents.Controllers
             return View("CreateEdit", challan);
         }
 
-        // POST: DeliveryChallan/Edit/5
+        // POST: DeliveryChallan/Edit/5 delivery challan edit
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(DeliveryChallan model)
@@ -97,7 +97,7 @@ namespace RMG_Shipping_Documents.Controllers
             return View("CreateEdit", model);
         }
 
-        // GET: DeliveryChallan/Delete/5
+        // GET: DeliveryChallan/Delete/5 to delete specific delivery challan show data in alert
         public IActionResult Delete(int id)
         {
             var challan = _deliveryChallanService.GetById(id);
@@ -109,7 +109,7 @@ namespace RMG_Shipping_Documents.Controllers
             return View(challan);
         }
 
-        // POST: DeliveryChallan/Delete/5
+        // POST: DeliveryChallan/Delete/5 confirm specific delivery challan deletion
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
@@ -126,7 +126,7 @@ namespace RMG_Shipping_Documents.Controllers
             }
         }
 
-        // POST: DeliveryChallan/UpdateStatus
+        // POST: DeliveryChallan/UpdateStatus to update a delivery challan
         [HttpPost]
         public IActionResult UpdateStatus(int id, string status)
         {
