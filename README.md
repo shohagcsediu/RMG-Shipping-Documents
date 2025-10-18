@@ -42,3 +42,6 @@ Install nuget package I have used on this project is:
 - QRCoder
 
 Finally Open in visual studio and install , now run the project. Project will be run on http://localhost:5161/ or similar port on your browser.
+
+Read full details on 👉 [Wiki](https://github.com/shohagcsediu/RMG-Shipping-Documents/wiki/RMG%E2%80%90Shipping) 👈
+
