@@ -1,673 +1,168 @@
 ﻿@model IEnumerable<RMG_Shipping_Documents.Models.Gatepass>
-
 @{
     ViewData["Title"] = "Gatepass Management";
 }
-
-<style>
-    .section-header {
-        background-color: #17a2b8;
-        color: white;
-        padding: 8px 12px;
-        font-weight: bold;
-        margin-top: 20px;
-    }
-
-    .table {
-        width: 100%;
-        margin-bottom: 1rem;
-        color: #212529;
-        border-collapse: collapse;
-    }
-
-        .table th, .table td {
-            padding: 0.75rem;
-            vertical-align: top;
-            border-top: 1px solid #dee2e6;
-        }
-
-        .table thead th {
-            vertical-align: bottom;
-            border-bottom: 2px solid #dee2e6;
-            border-top: none;
-        }
-
-    .table-striped tbody tr:nth-of-type(odd) {
-        background-color: rgba(0,0,0,.05);
-    }
-
-    .table-bordered {
-        border: 1px solid #dee2e6;
-    }
-
-        .table-bordered th, .table-bordered td {
-            border: 1px solid #dee2e6;
-        }
-
-    .table-dark {
-        color: #fff;
-        background-color: #343a40;
-    }
-
-        .table-dark th, .table-dark td {
-            border-color: #454d55;
-        }
-
-    .btn {
-        display: inline-block;
-        font-weight: 400;
-        text-align: center;
-        white-space: nowrap;
-        vertical-align: middle;
-        user-select: none;
-        border: 1px solid transparent;
-        padding: 0.375rem 0.75rem;
-        font-size: 1rem;
-        line-height: 1.5;
-        border-radius: 0.25rem;
-        transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-    }
-
-    .btn-primary {
-        color: #fff;
-        background-color: #007bff;
-        border-color: #007bff;
-    }
-
-    .btn-info {
-        color: #fff;
-        background-color: #17a2b8;
-        border-color: #17a2b8;
-    }
-
-    .btn-danger {
-        color: #fff;
-        background-color: #dc3545;
-        border-color: #dc3545;
-    }
-
-    .btn-secondary {
-        color: #fff;
-        background-color: #6c757d;
-        border-color: #6c757d;
-    }
-
-    .btn-light {
-        color: #212529;
-        background-color: #f8f9fa;
-        border-color: #f8f9fa;
-    }
-
-    .btn-sm {
-        padding: 0.25rem 0.5rem;
-        font-size: 0.875rem;
-        line-height: 1.5;
-        border-radius: 0.2rem;
-    }
-
-    .d-flex {
-        display: flex !important;
-    }
-
-    .justify-content-between {
-        justify-content: space-between !important;
-    }
-
-    .align-items-center {
-        align-items: center !important;
-    }
-
-    .mt-2 {
-        margin-top: 0.5rem !important;
-    }
-
-    .text-center {
-        text-align: center !important;
-    }
-
-    /* Modal Styles */
-    .modal {
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: 1055;
-        display: none;
-        width: 100%;
-        height: 100%;
-        overflow-x: hidden;
-        overflow-y: auto;
-        outline: 0;
-    }
-
-    .modal-dialog {
-        position: relative;
-        width: auto;
-        max-width: 500px;
-        margin: 1.75rem auto;
-        pointer-events: none;
-    }
-
-    .modal.fade .modal-dialog {
-        transition: transform .3s ease-out;
-        transform: translate(0,-50px);
-    }
-
-    .modal.show .modal-dialog {
-        transform: none;
-    }
-
-    .modal-content {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        pointer-events: auto;
-        background-color: #fff;
-        background-clip: padding-box;
-        border: 1px solid rgba(0,0,0,.2);
-        border-radius: 0.3rem;
-        outline: 0;
-    }
-
-    .modal-backdrop {
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: 1050;
-        width: 100vw;
-        height: 100vh;
-        background-color: #000;
-    }
-
-        .modal-backdrop.fade {
-            opacity: 0;
-        }
-
-        .modal-backdrop.show {
-            opacity: .5;
-        }
-
-    .modal-header {
-        display: flex;
-        flex-shrink: 0;
-        align-items: center;
-        justify-content: space-between;
-        padding: 1rem 1rem;
-        border-bottom: 1px solid #dee2e6;
-        border-top-left-radius: calc(0.3rem - 1px);
-        border-top-right-radius: calc(0.3rem - 1px);
-    }
-
-    .modal-title {
-        margin-bottom: 0;
-        line-height: 1.5;
-    }
-
-    .modal-body {
-        position: relative;
-        flex: 1 1 auto;
-        padding: 1rem;
-    }
-
-    .modal-footer {
-        display: flex;
-        flex-wrap: wrap;
-        flex-shrink: 0;
-        align-items: center;
-        justify-content: flex-end;
-        padding: 0.75rem;
-        border-top: 1px solid #dee2e6;
-        border-bottom-right-radius: calc(0.3rem - 1px);
-        border-bottom-left-radius: calc(0.3rem - 1px);
-    }
-
-    .btn-close {
-        box-sizing: content-box;
-        width: 1em;
-        height: 1em;
-        padding: 0.25em 0.25em;
-        color: #000;
-        background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='m.235.867 8.832 8.832-8.832 8.832a.5.5 0 0 0 .707.707L9.774 10.4l8.832 8.832a.5.5 0 0 0 .707-.707L10.481 9.774l8.832-8.832a.5.5 0 0 0-.707-.707L9.774 9.067.942.235a.5.5 0 0 0-.707.632z'/%3e%3c/svg%3e") center/1em auto no-repeat;
-        border: 0;
-        border-radius: 0.25rem;
-        opacity: .5;
-    }
-
-        .btn-close:hover {
-            color: #000;
-            text-decoration: none;
-            opacity: .75;
-        }
-
-    .alert {
-        position: relative;
-        padding: 0.75rem 1.25rem;
-        margin-bottom: 1rem;
-        border: 1px solid transparent;
-        border-radius: 0.25rem;
-    }
-
-    .alert-success {
-        color: #0f5132;
-        background-color: #d1e7dd;
-        border-color: #badbcc;
-    }
-
-    .alert-danger {
-        color: #842029;
-        background-color: #f8d7da;
-        border-color: #f5c2c7;
-    }
-
-    .position-fixed {
-        position: fixed !important;
-    }
-
-    .alert-dismissible {
-        padding-right: 3rem;
-    }
-
-        .alert-dismissible .btn-close {
-            position: absolute;
-            top: 0;
-            right: 0;
-            z-index: 2;
-            padding: 0.75rem 1.25rem;
-        }
-
-    /* Details Table Styles */
-    .details-table {
-        width: 100%;
-        margin-bottom: 1rem;
-        color: #212529;
-        border-collapse: collapse;
-    }
-
-        .details-table th {
-            background-color: #e9ecef;
-            padding: 0.5rem;
-            text-align: left;
-            font-weight: 600;
-            width: 30%;
-        }
-
-        .details-table td {
-            padding: 0.5rem;
-            border-bottom: 1px solid #dee2e6;
-        }
-</style>
 
 <div class="section-header d-flex justify-content-between align-items-center">
     <span>Gatepass Management</span>
     <a class="btn btn-primary" asp-action="Create">Create New Gatepass</a>
 </div>
 
-<div class="mt-2">
-    <table class="table table-striped table-bordered">
-        <thead class="table-dark">
-            <tr>
-                <th>Gate Pass No</th>
-                <th>Date</th>
-                <th>Company Name</th>
-                <th>Issued To</th>
-                <th>Truck No</th>
-                <th>Driver Name</th>
-                <th>Mobile No</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model != null && Model.Any())
+<table class="table table-striped table-bordered mt-2">
+    <thead class="table-dark">
+        <tr>
+            <th>Gate Pass No</th>
+            <th>Date</th>
+            <th>Company Name</th>
+            <th>Issued To</th>
+            <th>Truck No</th>
+            <th>Driver Name</th>
+            <th>Mobile No</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var item in Model)
             {
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td>@item.GatePassNo</td>
-                        <td>@item.Date.ToString("dd/MM/yyyy")</td>
-                        <td>@item.CompanyName</td>
-                        <td>@item.IssuedTo</td>
-                        <td>@item.TruckNo</td>
-                        <td>@item.DriverName</td>
-                        <td>@item.MobileNo</td>
-                        <td>
-                            <div class="dropdown">
-                                <button class="btn btn-sm btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    ☰
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a class="dropdown-item" href="#" onclick="viewDetails(@item.Id)">View</a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="#" onclick="confirmDelete(@item.Id, '@item.GatePassNo')">Delete</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                }
-            }
-            else
-            {
-                <tr>
-                    <td colspan="8" class="text-center">No gatepasses found.</td>
+                <tr id="row-@item.Id">
+                    <td>@item.GatePassNo</td>
+                    <td>@item.Date.ToString("dd/MM/yyyy")</td>
+                    <td>@item.CompanyName</td>
+                    <td>@item.IssuedTo</td>
+                    <td>@item.TruckNo</td>
+                    <td>@item.DriverName</td>
+                    <td>@item.MobileNo</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown">☰</button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#" onclick="viewDetails(@item.Id)">View</a></li>
+                                <li><a class="dropdown-item" asp-action="Edit" asp-route-id="@item.Id">Edit</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="confirmDelete(@item.Id, '@item.GatePassNo')">Delete</a></li>
+                            </ul>
+                        </div>
+                    </td>
                 </tr>
             }
-        </tbody>
-    </table>
-</div>
+        }
+        else
+        {
+            <tr>
+                <td colspan="8" class="text-center">No gatepasses found.</td>
+            </tr>
+        }
+    </tbody>
+</table>
 
 <!-- Details Modal -->
-<div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+<div class="modal fade" id="detailsModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="detailsModalLabel">Gatepass Details</h5>
-                <button type="button" class="btn-close" onclick="closeDetailsModal()" aria-label="Close"></button>
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title">Gatepass Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body">
-                <table class="details-table">
-                    <tr>
-                        <th>Gate Pass No</th>
-                        <td id="detailGatePassNo"></td>
-                    </tr>
-                    <tr>
-                        <th>Date</th>
-                        <td id="detailDate"></td>
-                    </tr>
-                    <tr>
-                        <th>Company Name</th>
-                        <td id="detailCompanyName"></td>
-                    </tr>
-                    <tr>
-                        <th>Issued To</th>
-                        <td id="detailIssuedTo"></td>
-                    </tr>
-                    <tr>
-                        <th>Address</th>
-                        <td id="detailAddress"></td>
-                    </tr>
-                    <tr>
-                        <th>Truck No</th>
-                        <td id="detailTruckNo"></td>
-                    </tr>
-                    <tr>
-                        <th>Driver Name</th>
-                        <td id="detailDriverName"></td>
-                    </tr>
-                    <tr>
-                        <th>Transport Company</th>
-                        <td id="detailTransportCompany"></td>
-                    </tr>
-                    <tr>
-                        <th>Mobile No</th>
-                        <td id="detailMobileNo"></td>
-                    </tr>
-                    <tr>
-                        <th>License No</th>
-                        <td id="detailLicenseNo"></td>
-                    </tr>
-                    <tr>
-                        <th>Remarks</th>
-                        <td id="detailRemarks"></td>
-                    </tr>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="closeDetailsModal()">Close</button>
+            <div class="modal-body text-center">
+                <img id="detailQrCode" width="100" height="100" />
+                <p id="detailGatePassNo" class="mt-2 fw-bold"></p>
+                <p id="detailDate"></p>
+                <p id="detailCompanyName"></p>
+                <p id="detailIssuedTo"></p>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Delete Confirmation Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                Are you sure you want to delete gatepass <strong id="gatepassNoToDelete"></strong>?
-                <div id="deleteError" class="alert alert-danger mt-3" style="display: none;"></div>
+                Are you sure you want to delete Gatepass <strong id="gatepassNoToDelete"></strong>?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger" id="confirmDelete">Delete</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Add anti-forgery token for AJAX requests -->
-<form asp-antiforgery="true"></form>
+<form asp-antiforgery="true">
+    
+</form>
 
 @section Scripts {
     <script>
-        let detailsModal;
-        let deleteModal;
         let currentGatepassId = null;
-        let currentGatepassNo = null;
 
-        // Initialize modals
-        document.addEventListener('DOMContentLoaded', function() {
-            detailsModal = {
-                show: function() {
-                    const modal = document.getElementById('detailsModal');
-                    modal.style.display = 'block';
-                    modal.classList.add('show');
-                    document.body.classList.add('modal-open');
-
-                    // Create backdrop
-                    let backdrop = document.createElement('div');
-                    backdrop.className = 'modal-backdrop fade show';
-                    backdrop.id = 'detailsModalBackdrop';
-                    document.body.appendChild(backdrop);
-
-                    // Prevent body scroll
-                    document.body.style.overflow = 'hidden';
-                },
-                hide: function() {
-                    const modal = document.getElementById('detailsModal');
-                    modal.style.display = 'none';
-                    modal.classList.remove('show');
-                    document.body.classList.remove('modal-open');
-
-                    // Remove backdrop
-                    let backdrop = document.getElementById('detailsModalBackdrop');
-                    if (backdrop) {
-                        backdrop.remove();
-                    }
-
-                    // Restore body scroll
-                    document.body.style.overflow = '';
-                }
-            };
-
-            deleteModal = {
-                show: function() {
-                    const modal = document.getElementById('deleteModal');
-                    modal.style.display = 'block';
-                    modal.classList.add('show');
-                    document.body.classList.add('modal-open');
-
-                    // Create backdrop
-                    let backdrop = document.createElement('div');
-                    backdrop.className = 'modal-backdrop fade show';
-                    backdrop.id = 'deleteModalBackdrop';
-                    document.body.appendChild(backdrop);
-
-                    // Prevent body scroll
-                    document.body.style.overflow = 'hidden';
-                },
-                hide: function() {
-                    const modal = document.getElementById('deleteModal');
-                    modal.style.display = 'none';
-                    modal.classList.remove('show');
-                    document.body.classList.remove('modal-open');
-
-                    // Remove backdrop
-                    let backdrop = document.getElementById('deleteModalBackdrop');
-                    if (backdrop) {
-                        backdrop.remove();
-                    }
-
-                    // Restore body scroll
-                    document.body.style.overflow = '';
-                }
-            };
-        });
-
-        // View details
         function viewDetails(id) {
-            currentGatepassId = id;
-
-            // Fetch gatepass details
             fetch(`/Gatepass/GetDetails/${id}`)
-                .then(response => response.json())
+                .then(res => res.json())
                 .then(data => {
                     if (data.success) {
-                        // Populate details modal
-                        document.getElementById('detailGatePassNo').textContent = data.gatepass.GatePassNo || '';
-                        document.getElementById('detailDate').textContent = data.gatepass.Date ? new Date(data.gatepass.Date).toLocaleDateString() : '';
-                        document.getElementById('detailCompanyName').textContent = data.gatepass.CompanyName || '';
-                        document.getElementById('detailIssuedTo').textContent = data.gatepass.IssuedTo || '';
-                        document.getElementById('detailAddress').textContent = data.gatepass.Address || '';
-                        document.getElementById('detailTruckNo').textContent = data.gatepass.TruckNo || '';
-                        document.getElementById('detailDriverName').textContent = data.gatepass.DriverName || '';
-                        document.getElementById('detailTransportCompany').textContent = data.gatepass.TransportCompany || '';
-                        document.getElementById('detailMobileNo').textContent = data.gatepass.MobileNo || '';
-                        document.getElementById('detailLicenseNo').textContent = data.gatepass.LicenseNo || '';
-                        document.getElementById('detailRemarks').textContent = data.gatepass.Remarks || '';
+                        const gp = data.gatepass;
 
-                        // Show details modal
-                        detailsModal.show();
+                        // Show QR code
+                        document.getElementById('detailQrCode').src = gp.qrCode;
+
+                        document.getElementById('detailGatePassNo').innerText = "Gatepass No: " + gp.gatePassNo;
+                        document.getElementById('detailDate').innerText = "Date: " + new Date(gp.date).toLocaleDateString();
+                        document.getElementById('detailCompanyName').innerText = "Company: " + gp.companyName;
+                        document.getElementById('detailIssuedTo').innerText = "Issued To: " + gp.issuedTo;
+
+                        new bootstrap.Modal(document.getElementById('detailsModal')).show();
                     } else {
-                        showNotification('Error loading gatepass details', 'danger');
+                        alert("Failed to load details.");
                     }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showNotification('Error loading gatepass details', 'danger');
                 });
         }
 
-        // Confirm delete
-        function confirmDelete(id, gatepassNo) {
+        function confirmDelete(id, gpNo) {
             currentGatepassId = id;
-            currentGatepassNo = gatepassNo;
-
-            // Set gatepass number
-            document.getElementById('gatepassNoToDelete').textContent = gatepassNo;
-            document.getElementById('deleteError').style.display = 'none';
-
-            // Show delete modal
-            deleteModal.show();
+            document.getElementById('gatepassNoToDelete').innerText = gpNo;
+            new bootstrap.Modal(document.getElementById('deleteModal')).show();
         }
 
-        // Close modal functions
-        function closeDetailsModal() {
-            detailsModal.hide();
-        }
 
-        function closeDeleteModal() {
-            deleteModal.hide();
-        }
 
-        // Handle confirm delete
-        document.getElementById('confirmDelete').addEventListener('click', function() {
-            if (!currentGatepassId) return;
 
-            // Get anti-forgery token
-            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+         document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
+                if (!currentGatepassId) return;
 
-            // Disable buttons during request
-            this.disabled = true;
-            document.querySelector('#deleteModal .btn-secondary').disabled = true;
+                const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+                const formData = new FormData();
+                formData.append("__RequestVerificationToken", token);
 
-            // Create form data
-            const formData = new FormData();
-            formData.append('__RequestVerificationToken', token);
+                fetch(`/Gatepass/Delete/${currentGatepassId}`, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        const row = document.getElementById('row-' + currentGatepassId);
+                        if (row) row.remove();
 
-            // Send delete request
-            fetch(`/Gatepass/Delete/${currentGatepassId}`, {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                if (response.ok) {
-                    // Show success message
-                    showNotification('Gatepass deleted successfully!', 'success');
-
-                    // Remove the row from table
-                    const row = document.querySelector(`button[onclick*="${currentGatepassId}"]`).closest('tr');
-                    row.remove();
-
-                    // Hide modal
-                    deleteModal.hide();
-
-                    // Check if table is empty
-                    const tbody = document.querySelector('tbody');
-                    if (tbody.children.length === 0) {
-                        tbody.innerHTML = '<tr><td colspan="8" class="text-center">No gatepasses found.</td></tr>';
+                        const deleteModal = bootstrap.Modal.getInstance(document.getElementById('deleteModal'));
+                        if (deleteModal) deleteModal.hide();
+                    } else {
+                        alert(data.message || 'Delete failed');
                     }
-                } else {
-                    throw new Error('Delete failed');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('deleteError').textContent = 'Error deleting gatepass. Please try again.';
-                document.getElementById('deleteError').style.display = 'block';
-            })
-            .finally(() => {
-                // Re-enable buttons
-                this.disabled = false;
-                document.querySelector('#deleteModal .btn-secondary').disabled = false;
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('Error deleting gatepass');
+                });
             });
         });
 
-        // Close modals when clicking on backdrop
-        document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('modal-backdrop')) {
-                if (e.target.id === 'detailsModalBackdrop') {
-                    detailsModal.hide();
-                } else if (e.target.id === 'deleteModalBackdrop') {
-                    deleteModal.hide();
-                }
-            }
-        });
-
-        // Close modals with Escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                if (document.getElementById('detailsModal').classList.contains('show')) {
-                    detailsModal.hide();
-                } else if (document.getElementById('deleteModal').classList.contains('show')) {
-                    deleteModal.hide();
-                }
-            }
-        });
-
-        // Show notification function
-        function showNotification(message, type) {
-            const notification = document.createElement('div');
-            notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
-            notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
-            notification.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" onclick="this.parentElement.remove()" aria-label="Close"></button>
-            `;
-            document.body.appendChild(notification);
-
-            // Auto remove after 3 seconds
-            setTimeout(() => {
-                notification.remove();
-            }, 3000);
-        }
     </script>
 }

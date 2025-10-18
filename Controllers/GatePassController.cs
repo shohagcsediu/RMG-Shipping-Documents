@@ -111,16 +111,18 @@ namespace RMG_Shipping_Documents.Controllers
         }
 
         // GET: Gatepass/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
             var gatepass = _gatepassService.GetById(id);
             if (gatepass == null)
-            {
-                return NotFound();
-            }
+                return Json(new { success = false, message = "Gatepass not found" });
 
-            return View(gatepass);
+            _gatepassService.Delete(id);
+            return Json(new { success = true });
         }
+
 
         // POST: Gatepass/Delete/5
         [HttpPost, ActionName("Delete")]
@@ -205,22 +207,38 @@ namespace RMG_Shipping_Documents.Controllers
 
         // GET: Gatepass/GetDetails/5
         [HttpGet]
+        
         public IActionResult GetDetails(int id)
         {
-            try
-            {
-                var gatepass = _gatepassService.GetById(id);
-                if (gatepass == null)
-                {
-                    return Json(new { success = false });
-                }
+            var gatepass = _gatepassService.GetById(id);
+            if (gatepass == null)
+                return Json(new { success = false });
 
-                return Json(new { success = true, gatepass = gatepass });
-            }
-            catch (Exception ex)
+            // Generate QR code as base64 image using QRCoder
+            string qrCodeBase64 = "";
+            using (var qrGenerator = new QRCoder.QRCodeGenerator())
             {
-                return Json(new { success = false, message = ex.Message });
+                var qrCodeData = qrGenerator.CreateQrCode($"{gatepass.GatePassNo}|{gatepass.Date:yyyy-MM-dd}|{gatepass.CompanyName}|{gatepass.IssuedTo}", QRCoder.QRCodeGenerator.ECCLevel.Q);
+                using (var qrCode = new QRCoder.PngByteQRCode(qrCodeData))
+                {
+                    var qrBytes = qrCode.GetGraphic(20);
+                    qrCodeBase64 = "data:image/png;base64," + Convert.ToBase64String(qrBytes);
+                }
             }
+
+            return Json(new
+            {
+                success = true,
+                gatepass = new
+                {
+                    gatePassNo = gatepass.GatePassNo,
+                    date = gatepass.Date,
+                    companyName = gatepass.CompanyName,
+                    issuedTo = gatepass.IssuedTo,
+                    qrCode = qrCodeBase64
+                }
+            });
         }
+
     }
 }
