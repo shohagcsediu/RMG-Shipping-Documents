@@ -272,7 +272,7 @@
 
 <div class="section-header-yellow d-flex justify-content-between align-items-center">
     <span>@(isEdit ? "EDIT PACKING LIST" : "CREATE PACKING LIST")</span>
-    <a href="/ExcelTemplate?buyerName=@Model.BuyerName"
+    <a href="/ExcelTemplate?buyerName=@Model.BuyerName&packingListId=@Model.Id"
        target="_blank"
        style="font-weight: normal; font-size: 14px; text-decoration: none; color: inherit; cursor: pointer;">
         ⚙️ Packing template setting

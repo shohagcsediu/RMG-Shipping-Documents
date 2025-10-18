@@ -2,70 +2,192 @@
 
 @{
     ViewData["Title"] = "Create Excel Template";
+    var buyerName = ViewBag.BuyerName as string ?? "Unknown Buyer";
+    var packingListId = ViewBag.PackingListId as string ?? "";
 }
-<h2>Create Packing Template for buyer: Next source ltd</h2>
-<form asp-action="Create" method="post" enctype="multipart/form-data">
-    <div class="row mb-3 align-items-end">
+
+<h2>Create Packing Template for buyer: @buyerName</h2>
+
+<form asp-action="Create" method="post" enctype="multipart/form-data" id="templateForm">
+    <input type="hidden" name="buyerName" value="@buyerName" />
+    <input type="hidden" name="packingListId" value="@packingListId" />
+
+    <div class="row mb-3">
         <div class="col-md-6">
             <label class="form-label">Template Name</label>
-            <input asp-for="TemplateName" class="form-control" />
+            <input asp-for="TemplateName" class="form-control" required />
             <span asp-validation-for="TemplateName" class="text-danger"></span>
-
-            <!-- Dropdown below Template Name -->
-            <div class="mt-2">
-                <label class="form-label">Excel Mail Merge Field</label>
-                <select class="form-select" name="excelMergeField">
-                    <option value="">Select a field</option>
-                    <option value="CustomerName">Customer Name</option>
-                    <option value="OrderNumber">Order Number</option>
-                    <option value="ProductName">Product Name</option>
-                    <option value="Quantity">Quantity</option>
-                    <option value="Price">Price</option>
-                </select>
-            </div>
         </div>
         <div class="col-md-6">
             <label class="form-label">Upload Excel Template (.xlsx)</label>
-            <input type="file" name="uploadedFile" class="form-control" accept=".xlsx" />
+            <input type="file" name="file" id="excelFile" class="form-control" accept=".xlsx" required />
             <span asp-validation-for="FilePath" class="text-danger"></span>
+        </div>
+    </div>
 
-            <!-- Dropdown below Upload Excel -->
-            <div class="mt-2">
-                <div class="row align-items-center">
-                    <div class="col-md-8">
-                        <label class="form-label">Form Field</label>
-                        <select class="form-select" name="formField">
-                            <option value="">Select a field</option>
-                            <option value="PackingDate">Packing Date</option>
-                            <option value="ShipmentType">Shipment Type</option>
-                            <option value="Warehouse">Warehouse</option>
-                            <option value="Status">Status</option>
-                            <option value="Notes">Notes</option>
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-check mt-4">
-                            <input class="form-check-input" type="checkbox" name="isRecurring" id="isRecurring">
-                            <label class="form-check-label" for="isRecurring">
-                                Recurring data
-                            </label>
-                        </div>
-                    </div>
+    <!-- Field Mapping Header (Labels) -->
+    <div class="row mb-2">
+        <div class="col-md-4">
+            <label class="form-label fw-bold">Excel Column</label>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label fw-bold">PackingDetails Field</label>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label fw-bold">Recurring</label>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label fw-bold">Action</label>
+        </div>
+    </div>
+
+    <!-- Field Mapping Container -->
+    <div id="fieldMappingContainer">
+        <div class="row mb-3 field-mapping-row">
+            <div class="col-md-4">
+                <select class="form-select excel-field-select" name="excelFields" required>
+                    <option value="">Select Excel Column</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <select class="form-select" name="formFields" required>
+                    <option value="">Select PackingDetails Field</option>
+                    <option value="SL">SL</option>
+                    <option value="NoOfCarton">No Of Carton</option>
+                    <option value="CartonStart">Carton Start</option>
+                    <option value="CartonEnd">Carton End</option>
+                    <option value="SizeName">Size Name</option>
+                    <option value="Ratio">Ratio</option>
+                    <option value="ArticleNo">Article No</option>
+                    <option value="PcsPack">Pcs Pack</option>
+                    <option value="PacCarton">Pac Carton</option>
+                    <option value="OrderQtyPcs">Order Qty Pcs</option>
+                    <option value="TotalPcsSize">Total Pcs Size</option>
+                    <option value="TotalPacs">Total Pacs</option>
+                    <option value="GWt">Gross Weight (GWt)</option>
+                    <option value="NWt">Net Weight (NWt)</option>
+                    <option value="TotalGWt">Total Gross Weight</option>
+                    <option value="TotalNWt">Total Net Weight</option>
+                    <option value="Length">Length</option>
+                    <option value="Weight">Weight</option>
+                    <option value="Height">Height</option>
+                    <option value="CBM">CBM</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="isRecurringList" value="true">
+                    <label class="form-check-label">Yes</label>
                 </div>
+            </div>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-danger btn-sm w-100 remove-row-btn">
+                    <i class="bi bi-trash"></i> Remove
+                </button>
             </div>
         </div>
     </div>
+
     <div class="row mb-3">
         <div class="col-md-12">
-            <button type="button" class="btn btn-primary" onclick="addRow()">
-                <i class="bi bi-plus-circle"></i> Add Row
+            <button type="button" class="btn btn-primary" id="addRowBtn">
+                <i class="bi bi-plus-circle"></i> Add Row mapping
             </button>
         </div>
     </div>
+
     <div class="form-check mb-3">
         <input asp-for="IsDefault" class="form-check-input" />
         <label class="form-check-label">Set as Active</label>
     </div>
+
     <button type="submit" class="btn btn-success">Submit</button>
-    <a asp-action="Index" class="btn btn-secondary">Back to template list</a>
+    <a asp-action="Index" asp-route-buyerName="@buyerName" asp-route-packingListId="@packingListId" class="btn btn-secondary">
+        Back to template list
+    </a>
 </form>
+
+@section Scripts {
+    <script>
+        let excelColumns = [];
+
+        // Handle Excel file upload and extract columns
+        document.getElementById('excelFile').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const formData = new FormData();
+                formData.append('file', file);
+
+                fetch('@Url.Action("GetExcelColumns", "ExcelTemplate")', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        excelColumns = data.columns;
+                        updateExcelColumnDropdowns();
+                    } else {
+                        alert('Error reading Excel file: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error uploading file');
+                });
+            }
+        });
+
+        // Update all Excel column dropdowns
+        function updateExcelColumnDropdowns() {
+            const selects = document.querySelectorAll('.excel-field-select');
+            selects.forEach(select => {
+                const currentValue = select.value;
+                select.innerHTML = '<option value="">Select Excel Column</option>';
+                excelColumns.forEach(col => {
+                    const option = document.createElement('option');
+                    option.value = col;
+                    option.textContent = col;
+                    if (col === currentValue) {
+                        option.selected = true;
+                    }
+                    select.appendChild(option);
+                });
+            });
+        }
+
+        // Add new row
+        document.getElementById('addRowBtn').addEventListener('click', function() {
+            const container = document.getElementById('fieldMappingContainer');
+            const newRow = document.querySelector('.field-mapping-row').cloneNode(true);
+
+            // Reset values
+            newRow.querySelectorAll('select').forEach(select => select.value = '');
+            newRow.querySelector('input[type="checkbox"]').checked = false;
+
+            container.appendChild(newRow);
+            updateExcelColumnDropdowns();
+        });
+
+        // Remove row (using event delegation)
+        document.getElementById('fieldMappingContainer').addEventListener('click', function(e) {
+            if (e.target.closest('.remove-row-btn')) {
+                const rows = document.querySelectorAll('.field-mapping-row');
+                if (rows.length > 1) {
+                    e.target.closest('.field-mapping-row').remove();
+                } else {
+                    alert('Cannot remove the last row');
+                }
+            }
+        });
+
+        // Form validation
+        document.getElementById('templateForm').addEventListener('submit', function(e) {
+            if (excelColumns.length === 0) {
+                e.preventDefault();
+                alert('Please upload an Excel file first');
+                return false;
+            }
+        });
+    </script>
+}
