@@ -99,7 +99,21 @@ CREATE TABLE ExcelTemplates (
     Id INT PRIMARY KEY IDENTITY,
     TemplateName NVARCHAR(100),
     FilePath NVARCHAR(200),
-    IsDefault BIT
+    FileType NVARCHAR(200),
+    Version NVARCHAR(200),
+    IsDefault BIT,
+    PackingListId NVARCHAR(255),
+    BuyerName NVARCHAR(500)
+);
+
+CREATE TABLE TemplateFieldMappings (
+    Id INT PRIMARY KEY IDENTITY,
+    TemplateId INT NOT NULL,
+    ExcelFieldName NVARCHAR(200),
+    FormFieldName NVARCHAR(200),
+    IsRecurring BIT DEFAULT 0,
+    OrderIndex INT DEFAULT 0,
+    FOREIGN KEY (TemplateId) REFERENCES ExcelTemplates(Id) ON DELETE CASCADE
 );
 
 
@@ -109,6 +123,7 @@ CREATE TABLE PackingDeclarationSetting(
     Id INT PRIMARY KEY IDENTITY,
     BuyerId NVARCHAR(100),
     Question NVARCHAR(600),
+    PackingId NVARCHAR(255),
 );
 
 CREATE TABLE PackingDeclaration(
@@ -117,6 +132,8 @@ CREATE TABLE PackingDeclaration(
     QuestionId NVARCHAR(600),
     Answer NVARCHAR(600),
 );
+
+
 
 
 CREATE TABLE DeliveryChallan(
@@ -146,7 +163,6 @@ CREATE TABLE DeliveryChallan(
     ModifiedDate DATETIME,
     ModifiedBy NVARCHAR(100)
 );
-
 
 
 CREATE TABLE Gatepass(
